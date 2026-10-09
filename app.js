@@ -63,6 +63,22 @@ function inicializarEventos() {
     });
   }
 
+  function establecerFechaActualEnInput() {
+  const inputFecha = document.getElementById('venta-fecha-input');
+  if (inputFecha && !inputFecha.value) {
+    const hoy = new Date().toISOString().split('T')[0];
+    inputFecha.value = hoy;
+  }
+}
+
+// Llama a esta función dentro de iniciarApp()
+function iniciarApp() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('app-container').classList.remove('hidden');
+  establecerFechaActualEnInput(); // <-- AÑADIR AQUÍ
+  switchTab('tab-dashboard');
+}
+
   const addRecipeBtn = document.getElementById('add-to-recipe-btn');
   if (addRecipeBtn) addRecipeBtn.addEventListener('click', agregarInsumoAReceta);
 
@@ -443,16 +459,27 @@ function eliminarProductoCatalogo(id) {
 function registrarVenta() {
   const prodId = document.getElementById('venta-producto-select').value;
   const cant = parseInt(document.getElementById('venta-cantidad').value);
+  const fechaInput = document.getElementById('venta-fecha-input').value; // <-- Capturar la fecha elegida
 
   const prodObj = catalogo.find(c => c.id === prodId);
-  if (!prodObj) return;
+  if (!prodObj) {
+    alert('Selecciona un producto del catálogo.');
+    return;
+  }
 
-  const ahora = new Date();
+  if (!fechaInput) {
+    alert('Por favor selecciona la fecha de la venta.');
+    return;
+  }
+
+  // Formatear la fecha seleccionada
+  const [year, month, day] = fechaInput.split('-');
+  const fechaSeleccionada = new Date(year, month - 1, day, 12, 0, 0);
 
   const nuevaVenta = {
     id: Date.now().toString(),
-    fecha: ahora.toLocaleString(),
-    fechaObj: ahora.toISOString(), // Almacenamiento ISO para filtrado de fechas
+    fecha: `${day}/${month}/${year}`,           // Formato visible en la tabla
+    fechaObj: fechaSeleccionada.toISOString(),  // Formato ISO para filtros del Dashboard
     producto: prodObj.nombre,
     cantidad: cant,
     totalCobrado: prodObj.precioVenta * cant,
@@ -462,6 +489,7 @@ function registrarVenta() {
   ventas.push(nuevaVenta);
   guardarEnStorage();
   renderVentas();
+  renderDashboard(); // Actualiza los gráficos del Dashboard con la fecha correspondiente
 }
 
 function renderVentas() {
@@ -597,3 +625,5 @@ function renderDashboard() {
     });
   }
 }
+
+
