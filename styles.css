@@ -1,0 +1,47 @@
+/* ==========================================
+   ESTILOS PERSONALIZADOS Y AJUSTES DE INTERFAZ
+   ========================================== */
+
+/* Barra de desplazamiento personalizada (Scrollbar) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #020617; /* slate-950 */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1e293b; /* slate-800 */
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #334155; /* slate-700 */
+}
+
+/* Transición suave para las pestañas */
+.tab-content {
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Efecto de enfoque en las tablas */
+tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+  background-color: rgba(30, 41, 59, 0.4);
+}
