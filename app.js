@@ -6,6 +6,7 @@ let recetaActual = [];
 let catalogo = [];
 let ventas = [];
 let gastos = [];
+let fidelidad = []; // Módulo de Tarjeta de Fidelidad Digital
 let categorias = ['MINI DONAS', 'DESAYUNOS', 'ARTE Y VELAS', 'OTROS'];
 let categoriaFiltroActual = 'TODOS';
 
@@ -15,7 +16,6 @@ let tarjetaDataUrlActual = null;
 let mensajeGeneradoActual = '';
 let estiloTarjetaSeleccionado = 'infantil';
 
-// Estado para el Calendario Visual
 let fechaCalendarioActual = new Date();
 let fechaSeleccionadaStr = new Date().toISOString().split('T')[0];
 
@@ -23,6 +23,11 @@ const insumosDemo = [
   { id: '1', nombre: 'Caja Regalo Decorada', categoria: 'EMPAQUES', cantidad: 4, minimo: 5, unidad: 'unidades', costo: 20000, costoUnitario: 5000 },
   { id: '2', nombre: 'Nutella 350g', categoria: 'MATERIA PRIMA', cantidad: 30, minimo: 100, unidad: 'gramos', costo: 24500, costoUnitario: 70 },
   { id: '3', nombre: 'Mini Donas Glaseadas', categoria: 'MATERIA PRIMA', cantidad: 100, minimo: 20, unidad: 'unidades', costo: 40000, costoUnitario: 400 }
+];
+
+const fidelidadDemo = [
+  { id: '1', nombre: 'Valeria Gomez', telefono: '3051234567', sellos: 4 },
+  { id: '2', nombre: 'Camilo Rengifo', telefono: '3109876543', sellos: 5 }
 ];
 
 // ==========================================
@@ -67,6 +72,9 @@ function inicializarEventos() {
   const formVenta = document.getElementById('form-venta');
   if (formVenta) formVenta.addEventListener('submit', (e) => { e.preventDefault(); registrarVenta(); });
 
+  const formFidelidad = document.getElementById('form-fidelidad');
+  if (formFidelidad) formFidelidad.addEventListener('submit', (e) => { e.preventDefault(); registrarSelloFidelidad(); });
+
   autoGenerarPrompt();
 }
 
@@ -100,6 +108,7 @@ function switchTab(tabId) {
 
   if (tabId === 'tab-dashboard') renderDashboard();
   if (tabId === 'tab-calendario') renderCalendario();
+  if (tabId === 'tab-fidelidad') renderFidelidad();
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
@@ -120,6 +129,7 @@ function cargarDatosDesdeStorage() {
   catalogo = JSON.parse(localStorage.getItem('des_catalogo')) || [];
   ventas = JSON.parse(localStorage.getItem('des_ventas')) || [];
   gastos = JSON.parse(localStorage.getItem('des_gastos')) || [];
+  fidelidad = JSON.parse(localStorage.getItem('des_fidelidad')) || fidelidadDemo;
   
   const catGuardadas = JSON.parse(localStorage.getItem('des_categorias'));
   if (catGuardadas && catGuardadas.length > 0) categorias = catGuardadas;
@@ -133,6 +143,7 @@ function cargarDatosDesdeStorage() {
   renderFiltrosCatalogo();
   renderCatalogo();
   renderVentas();
+  renderFidelidad();
 }
 
 function guardarEnStorage() {
@@ -140,7 +151,108 @@ function guardarEnStorage() {
   localStorage.setItem('des_catalogo', JSON.stringify(catalogo));
   localStorage.setItem('des_ventas', JSON.stringify(ventas));
   localStorage.setItem('des_gastos', JSON.stringify(gastos));
+  localStorage.setItem('des_fidelidad', JSON.stringify(fidelidad));
   localStorage.setItem('des_categorias', JSON.stringify(categorias));
+}
+
+// ==========================================
+// MÓDULO: TARJETA DE FIDELIDAD DIGITAL
+// ==========================================
+function registrarSelloFidelidad() {
+  const nombre = document.getElementById('fidelidad-nombre').value.trim();
+  const telefono = document.getElementById('fidelidad-telefono').value.trim();
+  const sellosNuevos = parseInt(document.getElementById('fidelidad-sellos').value) || 1;
+
+  if (!nombre || !telefono) return;
+
+  let cliente = fidelidad.find(f => f.telefono === telefono);
+  if (cliente) {
+    cliente.sellos += sellosNuevos;
+    cliente.nombre = nombre; // Actualizar nombre por si acaso
+  } else {
+    fidelidad.push({
+      id: Date.now().toString(),
+      nombre,
+      telefono,
+      sellos: sellosNuevos
+    });
+  }
+
+  guardarEnStorage();
+  renderFidelidad();
+
+  document.getElementById('fidelidad-nombre').value = '';
+  document.getElementById('fidelidad-telefono').value = '';
+  document.getElementById('fidelidad-sellos').value = '1';
+}
+
+function renderFidelidad() {
+  const container = document.getElementById('fidelidad-lista-clientes');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (fidelidad.length === 0) {
+    container.innerHTML = '<p class="text-xs text-slate-400 italic text-center py-6">No hay clientes registrados en la tarjeta de fidelidad.</p>';
+    return;
+  }
+
+  fidelidad.forEach(c => {
+    const meta = 5;
+    const sellosActuales = c.sellos % meta;
+    const ciclosCompletos = Math.floor(c.sellos / meta);
+    const esPremioListo = c.sellos >= meta;
+
+    let burbujasHTML = '';
+    for (let i = 1; i <= meta; i++) {
+      const activo = i <= (esPremioListo ? meta : sellosActuales);
+      burbujasHTML += `
+        <div class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs border ${activo ? 'bg-pink-600 text-white border-pink-600 shadow-sm' : 'bg-pink-50 text-pink-300 border-pink-200'}">
+          ${activo ? '🍩' : i}
+        </div>
+      `;
+    }
+
+    const card = document.createElement('div');
+    card.className = 'p-4 bg-white border border-pink-200 rounded-2xl shadow-sm space-y-3';
+    card.innerHTML = `
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+        <div>
+          <h4 class="font-bold text-slate-900 text-sm">👤 ${c.nombre}</h4>
+          <p class="text-xs text-pink-600 font-medium">📞 ${c.telefono} • Total Compras: ${c.sellos} ${ciclosCompletos > 0 ? `(🎁 ${ciclosCompletos} Premios ganados)` : ''}</p>
+        </div>
+        ${esPremioListo ? '<span class="px-3 py-1 bg-emerald-500 text-white font-bold rounded-xl text-xs animate-pulse">✨ ¡PREMIO DISPONIBLE!</span>' : ''}
+      </div>
+      <div class="flex items-center justify-between gap-1 py-1">
+        ${burbujasHTML}
+      </div>
+      <div class="flex gap-2 pt-1">
+        <button onclick="canjearPremioFidelidad('${c.id}')" class="flex-1 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl text-xs transition">Canjear Premio</button>
+        <button onclick="eliminarClienteFidelidad('${c.id}')" class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-xl text-xs transition">Eliminar</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function canjearPremioFidelidad(id) {
+  let cliente = fidelidad.find(f => f.id === id);
+  if (!cliente) return;
+
+  if (cliente.sellos < 5) {
+    alert('El cliente aún no completa los 5 sellos para reclamar su premio.');
+    return;
+  }
+
+  cliente.sellos -= 5; // Resta los 5 sellos del premio canjeado
+  guardarEnStorage();
+  renderFidelidad();
+  alert(`¡Premio canjeado con éxito para ${cliente.nombre}! Se han descontado 5 sellos de su tarjeta.`);
+}
+
+function eliminarClienteFidelidad(id) {
+  fidelidad = fidelidad.filter(f => f.id !== id);
+  guardarEnStorage();
+  renderFidelidad();
 }
 
 // ==========================================
@@ -851,7 +963,7 @@ function generarDedicatoriaYTarjetaIA() {
     },
     'Feliz Día General': {
       'Cariñoso y Emotivo': `¡Sorpresa, ${destinatario}! ☀️ Que este día te sorprenda con momentos hermosos y mucha felicidad. Te quiero un montón.`,
-      'Romántico y Profundo': `Pensar incesantemente en ti hace que cualquier día sea perfecto. Que este detalle te recuerde lo mucho que te amo, ${destinatario}.`,
+      'Romántico y Profundo': `Pensar en ti hace que cualquier día sea perfecto. Que este detalle te recuerde lo mucho que te amo, ${destinatario}.`,
       'Divertido y Alegre': `¡Despierta con una sonrisa! 🍩 Este desayuno sorpresa viene cargado de buena energía para ti. ¡A comernos el mundo!`,
       'Formal y Elegante': `Que tenga una excelente jornada. Un detalle especial para alegrar su día.`
     }
