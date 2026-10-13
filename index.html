@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>El Mundo de las Mini Donas y los Detalles - Sistema de Gestión</title>
   
-  <!-- Configuración PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#db2777">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,21 +13,13 @@
 
   <!-- Framework CSS Tailwind (vía CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Hoja de Estilos Personalizada -->
   <link rel="stylesheet" href="styles.css">
-  
-  <!-- Chart.js para Gráficos Financieros -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <!-- Librería de Iconografía Lucide -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
 <body class="h-full font-sans antialiased overflow-x-hidden pb-16 md:pb-0">
 
-  <!-- ========================================== -->
-  <!-- PANTALLA DE LOGIN CON AVISO DE DERECHOS    -->
-  <!-- ========================================== -->
+  <!-- PANTALLA DE LOGIN -->
   <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-pink-950/40 backdrop-blur-md p-4">
     <div class="w-full max-w-md p-6 sm:p-8 bg-white/95 border border-pink-200 rounded-3xl shadow-2xl space-y-6 text-center">
       <div class="space-y-2">
@@ -59,25 +50,23 @@
     </div>
   </div>
 
-  <!-- ========================================== -->
-  <!-- ESTRUCTURA DE LA APLICACIÓN PRINCIPAL      -->
-  <!-- ========================================== -->
+  <!-- APLICACIÓN PRINCIPAL -->
   <div id="app-container" class="hidden min-h-screen flex flex-col md:flex-row">
 
-    <!-- ENCABEZADO SUPERIOR MÓVIL -->
+    <!-- ENCABEZADO MÓVIL -->
     <header class="md:hidden sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-pink-200 px-4 py-3 flex items-center justify-between shadow-sm">
       <div class="flex items-center gap-2.5">
         <div class="w-7 h-7 rounded-lg bg-pink-500/10 text-pink-600 flex items-center justify-center">
           <i data-lucide="cake" class="w-4 h-4"></i>
         </div>
-        <span class="font-black text-slate-800 tracking-wide text-xs">El Mundo de las Mini Donas y los Detalles</span>
+        <span class="font-black text-slate-800 tracking-wide text-xs">Mini Donas Manizales</span>
       </div>
       <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-500 p-1" title="Cerrar Sesión">
         <i data-lucide="log-out" class="w-4 h-4"></i>
       </button>
     </header>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR MÓVIL -->
+    <!-- NAVEGACIÓN MÓVIL INFERIOR -->
     <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-pink-200 px-1 py-1.5 flex justify-around items-center shadow-lg">
       <button data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
         <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
@@ -103,13 +92,17 @@
         <i data-lucide="truck" class="w-5 h-5"></i>
         <span class="text-[9px] font-semibold mt-0.5">Pedidos</span>
       </button>
+      <button data-tab="tab-calendario" onclick="switchTab('tab-calendario')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
+        <i data-lucide="calendar" class="w-5 h-5"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Calendario</span>
+      </button>
       <button data-tab="tab-tarjetas-ia" onclick="switchTab('tab-tarjetas-ia')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-pink-600 hover:text-pink-700">
         <i data-lucide="sparkles" class="w-5 h-5"></i>
-        <span class="text-[9px] font-bold mt-0.5">Tarjetas IA</span>
+        <span class="text-[9px] font-bold mt-0.5">Tarjetas</span>
       </button>
     </nav>
 
-    <!-- MENÚ LATERAL DESKTOP & TABLET -->
+    <!-- MENÚ LATERAL ESCRITORIO -->
     <aside class="hidden md:flex w-64 bg-white/90 backdrop-blur-md border-r border-pink-200/80 flex-col justify-between shrink-0 shadow-sm">
       <div>
         <div class="h-16 flex items-center gap-3 px-6 border-b border-pink-100">
@@ -138,6 +131,9 @@
           <button data-tab="tab-ventas" id="nav-tab-ventas" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-slate-600 hover:text-pink-600 hover:bg-pink-50">
             <i data-lucide="truck" class="w-4 h-4"></i> Pedidos y Logística
           </button>
+          <button data-tab="tab-calendario" id="nav-tab-calendario" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-slate-600 hover:text-pink-600 hover:bg-pink-50">
+            <i data-lucide="calendar" class="w-4 h-4"></i> Calendario Visual
+          </button>
           <button data-tab="tab-tarjetas-ia" id="nav-tab-tarjetas-ia" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition text-pink-600 bg-pink-50 hover:bg-pink-100">
             <i data-lucide="sparkles" class="w-4 h-4 text-pink-600"></i> Tarjetas & Dedicatorias IA
           </button>
@@ -163,11 +159,11 @@
       </div>
     </aside>
 
-    <!-- ÁREA DE CONTENIDO PRINCIPAL -->
+    <!-- CONTENIDO PRINCIPAL -->
     <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 space-y-6 md:space-y-8 flex flex-col justify-between">
 
       <div class="space-y-6 md:space-y-8">
-        <!-- PESTAÑAS ANTERIORES SE MANTIENEN IGUAL (DASHBOARD, INSUMOS, GASTOS, CALCULADORA, CATÁLOGO, VENTAS) -->
+        <!-- DASHBOARD -->
         <section id="tab-dashboard" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Resumen General de Rendimiento</h2>
@@ -220,15 +216,25 @@
           </div>
         </section>
 
-        <!-- INVENTARIO -->
+        <!-- INVENTARIO & ALERTAS DE STOCK BAJO -->
         <section id="tab-insumos" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Inventario de Insumos y Materiales</h2>
-            <p class="text-xs text-slate-600 font-medium">Organiza tus ingredientes por categorías para calcular sus costos</p>
+            <p class="text-xs text-slate-600 font-medium">Controla tus existencias y recibe alertas de stock bajo</p>
           </div>
+
+          <!-- Alerta de Stock Bajo (Contenedor Dinámico) -->
+          <div id="alerta-stock-container" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-3xl shadow-sm flex items-start gap-3">
+            <div class="p-2 bg-amber-100 text-amber-600 rounded-xl shrink-0 mt-0.5"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+            <div class="space-y-1">
+              <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wide">¡Atención! Insumos con Stock Bajo</h4>
+              <p id="alerta-stock-texto" class="text-xs text-amber-700"></p>
+            </div>
+          </div>
+
           <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
             <h3 class="text-xs sm:text-sm font-bold text-slate-800">Registrar Nuevo Material o Ingrediente</h3>
-            <form id="form-insumo" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+            <form id="form-insumo" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-4">
               <div>
                 <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Insumo</label>
                 <input type="text" id="insumo-nombre" required placeholder="Ej: Nutella 350g" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
@@ -243,11 +249,15 @@
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Comprada</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Actual</label>
                 <input type="number" id="insumo-cantidad" step="any" required placeholder="Ej: 350" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Unidad de Medida</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Mínimo Alerta</label>
+                <input type="number" id="insumo-minimo" step="any" required placeholder="Ej: 50" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800" title="Cantidad mínima para activar alerta">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Unidad</label>
                 <select id="insumo-unidad" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
                   <option value="gramos">Gramos (g)</option>
                   <option value="unidades">Unidades (ud)</option>
@@ -255,22 +265,23 @@
                 </select>
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Costo Total ($)</label>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Costo Compra ($)</label>
                 <input type="number" id="insumo-costo" step="any" required placeholder="Ej: 24500" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
               </div>
-              <div class="lg:col-span-5 flex justify-end pt-2">
+              <div class="lg:col-span-6 flex justify-end pt-2">
                 <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-sm transition shadow-md shadow-pink-600/20">Guardar Insumo</button>
               </div>
             </form>
           </div>
+
           <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
-            <table class="w-full text-left text-sm min-w-[650px]">
+            <table class="w-full text-left text-sm min-w-[700px]">
               <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
                 <tr>
                   <th class="p-3 sm:p-4">Ingrediente</th>
                   <th class="p-3 sm:p-4">Categoría</th>
-                  <th class="p-3 sm:p-4">Presentación</th>
-                  <th class="p-3 sm:p-4">Costo Compra</th>
+                  <th class="p-3 sm:p-4">Stock Actual</th>
+                  <th class="p-3 sm:p-4">Costo Total</th>
                   <th class="p-3 sm:p-4">Costo Unitario</th>
                   <th class="p-3 sm:p-4 text-right">Acciones</th>
                 </tr>
@@ -280,7 +291,7 @@
           </div>
         </section>
 
-        <!-- GASTOS OPERATIVOS -->
+        <!-- GASTOS -->
         <section id="tab-gastos" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Control de Gastos Operativos</h2>
@@ -342,7 +353,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="border border-pink-200 rounded-2xl overflow-x-auto">
                 <table class="w-full text-left text-xs min-w-[350px]">
                   <thead class="bg-pink-50/80 text-slate-600 border-b border-pink-200">
@@ -357,7 +367,6 @@
                 </table>
               </div>
             </div>
-
             <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-5">
               <h3 class="text-xs sm:text-sm font-bold text-slate-800">Ajustes Financieros & Cotización</h3>
               <div>
@@ -382,7 +391,6 @@
                 <div class="flex justify-between text-sm text-pink-600 font-extrabold"><span>Precio Venta Sugerido:</span><span id="resumen-precio-venta">$0</span></div>
                 <div class="flex justify-between text-xs text-emerald-600 font-bold"><span>Ganancia Neta:</span><span id="resumen-ganancia-limpia">$0</span></div>
               </div>
-              
               <div class="flex gap-2">
                 <button id="save-recipe-btn" class="flex-1 py-3 bg-pink-600 hover:bg-pink-500 font-bold rounded-xl text-xs text-white transition shadow-md shadow-pink-600/20">Guardar en Catálogo</button>
                 <button onclick="generarCotizacionRapida()" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition shadow-md shadow-emerald-600/20" title="Generar Cotización WhatsApp">Cotizar</button>
@@ -469,7 +477,36 @@
           </div>
         </section>
 
-        <!-- PESTAÑA 7: GENERADOR DE TARJETAS & DEDICATORIAS CON IA -->
+        <!-- PESTAÑA NUEVA: CALENDARIO VISUAL DE PEDIDOS -->
+        <section id="tab-calendario" class="tab-content hidden space-y-6">
+          <div class="p-6 bg-gradient-to-r from-pink-500 to-rose-400 rounded-3xl text-white shadow-lg shadow-pink-500/15 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="space-y-1 text-center sm:text-left">
+              <h2 class="text-xl sm:text-2xl font-black tracking-tight">Calendario Visual de Entregas</h2>
+              <p class="text-xs sm:text-sm opacity-90 font-medium">Visualiza rápidamente tus desayunos sorpresa agendados por día en Manizales.</p>
+            </div>
+            <div class="flex items-center gap-3">
+              <button onclick="cambiarMesCalendario(-1)" class="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition text-white font-bold">◀</button>
+              <span id="cal-mes-anio-titulo" class="text-sm font-bold tracking-wide">Octubre 2026</span>
+              <button onclick="cambiarMesCalendario(1)" class="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition text-white font-bold">▶</button>
+            </div>
+          </div>
+
+          <!-- Cuadrícula del Calendario -->
+          <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm p-4 sm:p-6 space-y-4">
+            <div class="grid grid-cols-7 gap-2 text-center text-xs font-bold text-slate-500 uppercase">
+              <div>Dom</div><div>Lun</div><div>Mar</div><div>Mié</div><div>Jue</div><div>Vie</div><div>Sáb</div>
+            </div>
+            <div id="calendario-grid" class="grid grid-cols-7 gap-2"></div>
+          </div>
+
+          <!-- Detalle de pedidos del día seleccionado -->
+          <div class="p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-3">
+            <h3 id="cal-detalle-titulo" class="text-sm font-bold text-slate-800">Entregas programadas para hoy:</h3>
+            <div id="cal-detalle-lista" class="space-y-2"></div>
+          </div>
+        </section>
+
+        <!-- PESTAÑA: TARJETAS & DEDICATORIAS IA -->
         <section id="tab-tarjetas-ia" class="tab-content hidden space-y-6">
           <div class="p-6 bg-gradient-to-r from-pink-500 to-rose-400 rounded-3xl text-white shadow-lg shadow-pink-500/15 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="space-y-1 text-center sm:text-left">
@@ -482,7 +519,6 @@
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <!-- Izquierda: Formulario Redactor & Prompt Personalizado -->
             <div class="lg:col-span-5 bg-white/90 backdrop-blur-md border border-pink-200/80 p-6 rounded-3xl shadow-sm space-y-5">
               <div class="border-b border-pink-100 pb-3 flex items-center justify-between">
                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
@@ -491,7 +527,6 @@
                 <span class="text-[10px] uppercase font-bold text-pink-600 bg-pink-100 px-2 py-0.5 rounded-full">Gemini Pro</span>
               </div>
 
-              <!-- Estilo Visual Prediseñado de la Tarjeta -->
               <div class="space-y-2">
                 <label class="block text-xs font-bold text-slate-700">Estilo Visual de la Tarjeta</label>
                 <div class="grid grid-cols-2 gap-2">
@@ -549,13 +584,12 @@
                   <input type="text" id="ia-remitente-nombre" placeholder="Ej: Papá y Mamá" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500">
                 </div>
 
-                <!-- Campo de Prompt Personalizado para Generación de la Imagen -->
                 <div>
                   <div class="flex justify-between items-center mb-1">
                     <label class="block text-xs font-semibold text-slate-600">Prompt Personalizado para la Imagen (IA)</label>
                     <button type="button" onclick="autoGenerarPrompt()" class="text-[10px] font-bold text-pink-600 hover:underline">Auto-Redactar Prompt</button>
                   </div>
-                  <textarea id="ia-prompt-imagen" rows="3" placeholder="Ej: Ilustración infantil en acuarela con fondo rosa pastel, osito abrazando corazón, globos, estrellitas..." class="w-full p-2.5 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500 resize-none"></textarea>
+                  <textarea id="ia-prompt-imagen" rows="3" class="w-full p-2.5 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500 resize-none"></textarea>
                 </div>
 
                 <button onclick="generarDedicatoriaYTarjetaIA()" class="w-full py-3.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-xs transition shadow-md shadow-pink-600/20 flex items-center justify-center gap-2">
@@ -564,7 +598,6 @@
               </div>
             </div>
 
-            <!-- Derecha: Vista Previa y Creación de Tarjeta Gráfica -->
             <div class="lg:col-span-7 bg-white/90 backdrop-blur-md border border-pink-200/80 p-6 rounded-3xl shadow-sm space-y-6">
               <div class="border-b border-pink-100 pb-3 flex items-center justify-between">
                 <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
@@ -573,21 +606,18 @@
                 <span class="text-[10px] text-pink-600 bg-pink-100 font-bold px-2 py-0.5 rounded-full">Listo para Descargar</span>
               </div>
 
-              <!-- Canvas Oculto para Generar la Imagen -->
               <canvas id="canvas-tarjeta" class="hidden" width="800" height="1200"></canvas>
 
-              <!-- Contenedor Visual de la Tarjeta Generada -->
               <div id="tarjeta-preview-container" class="relative w-full aspect-[2/3] bg-pink-50/60 border-2 border-dashed border-pink-200 rounded-3xl flex flex-col items-center justify-center p-4 text-center overflow-hidden shadow-inner max-h-[600px] mx-auto">
                 <div id="tarjeta-empty-state" class="space-y-3">
                   <div class="w-14 h-14 mx-auto rounded-full bg-pink-100 text-pink-500 flex items-center justify-center">
                     <i data-lucide="image-plus" class="w-7 h-7"></i>
                   </div>
-                  <p class="text-xs font-semibold text-slate-500 max-w-xs">Haz clic en "Generar Dedicatoria & Tarjeta Gráfica" para crear tu diseño infantil e imprimible.</p>
+                  <p class="text-xs font-semibold text-slate-500 max-w-xs">Haz clic en "Generar Dedicatoria & Tarjeta Gráfica" para crear tu diseño imprimible.</p>
                 </div>
                 <img id="tarjeta-imagen-resultado" src="" alt="Tarjeta Gráfica" class="hidden w-full h-full object-contain rounded-2xl shadow-md">
               </div>
 
-              <!-- Botones de Acción de la Tarjeta -->
               <div id="tarjeta-acciones" class="hidden flex flex-wrap gap-2 pt-2">
                 <button onclick="descargarTarjetaImagen()" class="flex-1 py-3 bg-pink-600 hover:bg-pink-500 font-bold text-white text-xs rounded-xl transition shadow-md flex items-center justify-center gap-2">
                   <i data-lucide="download" class="w-4 h-4"></i> Descargar Imagen PNG
@@ -601,16 +631,14 @@
         </section>
       </div>
 
-      <!-- FOOTER GENERAL -->
       <footer class="mt-8 pt-4 border-t border-pink-200/60 text-center text-xs text-slate-500 mb-12 md:mb-0">
         <p>© 2026 <strong>Brissa Higuita Patiño</strong>. Todos los derechos reservados.</p>
         <p class="text-[10px] text-slate-400 mt-0.5">El Mundo de las Mini Donas • Manizales, Caldas, Colombia</p>
       </footer>
-
     </main>
   </div>
 
-  <!-- MODAL DE RECIBO / COMPROBANTE -->
+  <!-- MODAL RECIBO -->
   <div id="modal-recibo" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-pink-950/40 backdrop-blur-md p-4">
     <div class="w-full max-w-lg p-6 sm:p-8 bg-white border border-pink-200 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
       <div id="recibo-contenido" class="space-y-4 text-slate-800">
@@ -638,9 +666,6 @@
             <span id="rec-producto"></span>
             <span id="rec-total" class="font-bold text-pink-600"></span>
           </div>
-        </div>
-        <div class="text-center text-[10px] text-slate-400 pt-2">
-          ¡Gracias por confiar en nosotros para endulzar tus momentos especiales! ❤️
         </div>
       </div>
       <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
