@@ -1,47 +1,66 @@
-/* ==========================================
-   ESTILOS PERSONALIZADOS Y AJUSTES DE INTERFAZ
-   ========================================== */
+/* ========================================================================== */
+/* ESTILOS PERSONALIZADOS - EL MUNDO DE LAS MINI DONAS                        */
+/* Paleta de colores: Tonos rosados pastel, blancos limpios y grises suaves   */
+/* ========================================================================== */
 
-/* Barra de desplazamiento personalizada (Scrollbar) */
+/* 2. Configuración global del cuerpo de la página */
+body {
+  /* Fuente moderna y limpia del sistema operativo */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  
+  /* Fondo con degradado suave en tonos rosados inspirado en la identidad de la marca */
+  background: linear-gradient(135deg, #fce7f3 0%, #fff1f2 50%, #fbcfe8 100%);
+  
+  /* Color de texto principal en tono gris oscuro para garantizar excelente legibilidad */
+  color: #1e293b;
+}
+
+/* 3. Transiciones suaves predeterminadas para elementos interactivos */
+button, input, select {
+  transition: all 0.2s ease-in-out;
+}
+
+/* 4. Personalización de la barra de desplazamiento (Scrollbar) estético */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
+/* Pista o riel de la barra de desplazamiento */
 ::-webkit-scrollbar-track {
-  background: #020617; /* slate-950 */
+  background: #fce7f3;
 }
 
+/* Barra deslizable (thumb) en tono rosa pastel activo */
 ::-webkit-scrollbar-thumb {
-  background: #1e293b; /* slate-800 */
+  background: #f472b6;
   border-radius: 9999px;
 }
 
+/* Color al pasar el cursor por encima de la barra deslizable */
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155; /* slate-700 */
+  background: #db2777;
 }
 
-/* Transición suave para las pestañas */
-.tab-content {
-  animation: fadeIn 0.25s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
+/* 5. Estilos exclusivos para la impresión y generación de PDFs (Recibos / Cotizaciones) */
+@media print {
+  /* Oculta todos los elementos de la interfaz por defecto al imprimir */
+  body * {
+    visibility: hidden;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  
+  /* Hace visible únicamente el modal del recibo y su contenido interno */
+  #modal-recibo, #modal-recibo * {
+    visibility: visible;
   }
-}
-
-/* Efecto de enfoque en las tablas */
-tbody tr {
-  transition: background-color 0.15s ease;
-}
-
-tbody tr:hover {
-  background-color: rgba(30, 41, 59, 0.4);
+  
+  /* Ajusta el modal en modo impresión para ocupar toda la hoja limpiamente */
+  #modal-recibo {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white !important;
+    box-shadow: none !important;
+  }
 }
