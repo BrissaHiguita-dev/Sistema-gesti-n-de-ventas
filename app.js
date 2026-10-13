@@ -11,6 +11,9 @@ let categoriaFiltroActual = 'TODOS';
 
 let chartBalanceInstance = null;
 let chartPopularesInstance = null;
+let tarjetaDataUrlActual = null;
+let mensajeGeneradoActual = '';
+let estiloTarjetaSeleccionado = 'infantil';
 
 const insumosDemo = [
   { id: '1', nombre: 'Caja Regalo Decorada', categoria: 'EMPAQUES', cantidad: 10, unidad: 'unidades', costo: 20000, costoUnitario: 2000 },
@@ -62,6 +65,8 @@ function inicializarEventos() {
 
   const formVenta = document.getElementById('form-venta');
   if (formVenta) formVenta.addEventListener('submit', (e) => { e.preventDefault(); registrarVenta(); });
+
+  autoGenerarPrompt();
 }
 
 function handleLogin() {
@@ -133,6 +138,241 @@ function guardarEnStorage() {
   localStorage.setItem('des_ventas', JSON.stringify(ventas));
   localStorage.setItem('des_gastos', JSON.stringify(gastos));
   localStorage.setItem('des_categorias', JSON.stringify(categorias));
+}
+
+// ==========================================
+// MÓDULO: GENERADOR DE TARJETAS CON PROMPT ILUSTRADO & CANVAS
+// ==========================================
+function seleccionarEstiloTarjeta(estilo) {
+  estiloTarjetaSeleccionado = estilo;
+  ['infantil', 'elegante', 'fiesta', 'amor'].forEach(e => {
+    const btn = document.getElementById(`btn-estilo-${e}`);
+    if (btn) {
+      if (e === estilo) {
+        btn.className = "p-2.5 bg-pink-100 border-2 border-pink-500 rounded-xl text-left text-xs font-bold text-pink-700 transition flex items-center gap-2 shadow-sm";
+      } else {
+        btn.className = "p-2.5 bg-pink-50 border border-pink-200 rounded-xl text-left text-xs font-semibold text-slate-700 transition flex items-center gap-2";
+      }
+    }
+  });
+  autoGenerarPrompt();
+}
+
+function autoGenerarPrompt() {
+  const promptInput = document.getElementById('ia-prompt-imagen');
+  if (!promptInput) return;
+
+  const destinatario = document.getElementById('ia-destinatario-nombre')?.value.trim() || 'Nené';
+  const edad = document.getElementById('ia-edad')?.value.trim() || '12 añitos';
+
+  const promptsPorEstilo = {
+    'infantil': `Una hermosa tarjeta de cumpleaños ilustrada en acuarela pastel, para "${destinatario}" celebrando "${edad}". Fondo rosa suave con coronita dorada, corazoncitos rosados y morados, un tierno osito de peluche abrazando un corazón, globos pastel y estrellitas decorativas alrededor.`,
+    'elegante': `Una elegante tarjeta de regalo con marco dorado sobre fondo rosa pastel, flores delicadas en acuarela, tipografía estilizada y sutiles destellos dorados.`,
+    'fiesta': `Diseño festivo alegre de cumpleaños con globos coloridos, serpentinas, confeti, banderas pastel y pastel de cumpleaños decorativo con velas encendidas.`,
+    'amor': `Tarjeta romántica con corazones rojos y rosa pastel, marco de flores de cerezo, lazo elegante y detalles dorados sobre un fondo crema suave.`
+  };
+
+  promptInput.value = promptsPorEstilo[estiloTarjetaSeleccionado] || promptsPorEstilo['infantil'];
+}
+
+function generarDedicatoriaYTarjetaIA() {
+  const ocasion = document.getElementById('ia-ocasion').value;
+  const tono = document.getElementById('ia-tono').value;
+  const destinatario = document.getElementById('ia-destinatario-nombre').value.trim() || 'Nené';
+  const edad = document.getElementById('ia-edad').value.trim() || '12 añitos';
+  const remitente = document.getElementById('ia-remitente-nombre').value.trim() || 'Papá y Mamá';
+
+  const bancoMensajes = {
+    'Cumpleaños': {
+      'Cariñoso y Emotivo': `Cada vez estás más grande y aquí seguimos celebrando este día tan especial, el más especial para nosotros porque llegaste para cambiarnos la vida y darle sentido a nuestra existencia. Estamos muy orgullosos de ti, de ese ser lleno de amor, luz y empatía. ¡Eres grande y vas a ser gigante!`,
+      'Romántico y Profundo': `Amor de mi vida, ¡feliz cumpleaños! Cada latido mío celebra tu existencia. Que este día esté lleno de dulzura y que nuestros caminos sigan unidos eternamente. Te amo ❤️`,
+      'Divertido y Alegre': `¡Hoy cumples ${edad}, ${destinatario}! 🎉 Oficialmente un año más sabio y genial. ¡Que pases un día increíble lleno de risas y sorpresas!`,
+      'Formal y Elegante': `Le deseo un muy feliz cumpleaños a ${destinatario}. Que este día esté colmado de éxitos, bienestar y hermosos momentos en compañía de sus seres queridos.`
+    },
+    'Aniversario': {
+      'Cariñoso y Emotivo': `Feliz aniversario, ${destinatario}. Cada día a tu lado es un regalo maravilloso. Gracias por construir tantos recuerdos hermosos juntos.`,
+      'Romántico y Profundo': `Mi amor, celebrar un año más a tu lado es confirmar que eres el amor de mi vida. Gracias por cada sonrisa y por endulzar mis días. Te amo hoy y siempre ❤️`,
+      'Divertido y Alegre': `¡Feliz aniversario! 🥂 Sobrevivimos a otro año aguantándonos y amándonos con locura. ¡Brindemos por muchos años más llenos de risas!`,
+      'Formal y Elegante': `Felicitaciones en nuestro aniversario. Reitero mi compromiso de seguir caminando juntos con respeto, afecto y admiración mutua.`
+    },
+    'Amor y Amistad': {
+      'Cariñoso y Emotivo': `Para ${destinatario}: Tenerte en mi vida es una bendición enorme. Este detalle es solo una pequeña muestra de lo mucho que te quiero y valoro.`,
+      'Romántico y Profundo': `Eres el latido más bonito de mis días, ${destinatario}. No hay distancia ni momento en que no piense en ti. Con todo mi corazón.`,
+      'Divertido y Alegre': `¡Hola, ${destinatario}! 🍩 Un detalle dulce para alguien igual de dulce. ¡Que tengas un día genial!`,
+      'Formal y Elegante': `Un cordial saludo en esta fecha especial. Agradezco sinceramente su valiosa amistad y confianza.`
+    },
+    'Agradecimiento': {
+      'Cariñoso y Emotivo': `Querido/a ${destinatario}, no tengo palabras para agradecer todo lo que haces por mí. Este detalle va con todo mi corazón y gratitud.`,
+      'Romántico y Profundo': `Gracias por estar siempre, por tu complicidad y tu amor incondicional, ${destinatario}. Eres mi refugio favorito.`,
+      'Divertido y Alegre': `¡Gracias totales, ${destinatario}! Te mereces este detalle y mucho más.`,
+      'Formal y Elegante': `Le expreso mi más sincero agradecimiento por su valiosa colaboración y apoyo incondicional.`
+    },
+    'Perdón / Reconciliación': {
+      'Cariñoso y Emotivo': `Sé que las cosas no han estado fáciles, ${destinatario}, pero te quiero con el alma. Espero que este dulce detalle endulce tu corazón y nos acerque más.`,
+      'Romántico y Profundo': `Mi amor, lamento los errores. Mi único deseo es verte sonreír y seguir construyendo nuestra historia juntos. Te amo con el alma.`,
+      'Divertido y Alegre': `Un pequeño desliz merece un gran dulce. 🍩 ¿Hacemos las paces, ${destinatario}? ¡Te quiero muchísimo!`,
+      'Formal y Elegante': `Le ofrezco mis sinceras disculpas. Confío en que podamos superar este malentendido con cordialidad.`
+    },
+    'Feliz Día General': {
+      'Cariñoso y Emotivo': `¡Sorpresa, ${destinatario}! ☀️ Que este día te sorprenda con momentos hermosos y mucha felicidad. Te quiero un montón.`,
+      'Romántico y Profundo': `Pensar en ti hace que cualquier día sea perfecto. Que este detalle te recuerde lo mucho que te amo, ${destinatario}.`,
+      'Divertido y Alegre': `¡Despierta con una sonrisa! 🍩 Este desayuno sorpresa viene cargado de buena energía para ti. ¡A comernos el mundo!`,
+      'Formal y Elegante': `Que tenga una excelente jornada. Un detalle especial para alegrar su día.`
+    }
+  };
+
+  mensajeGeneradoActual = bancoMensajes[ocasion]?.[tono] || `¡Feliz día, ${destinatario}! Que disfrutes al máximo este detalle preparado con todo el cariño.`;
+
+  // Sincronizar automáticamente con la logística de pedidos
+  const inputVentaDedicatoria = document.getElementById('venta-dedicatoria');
+  if (inputVentaDedicatoria) {
+    inputVentaDedicatoria.value = mensajeGeneradoActual;
+  }
+
+  // Renderizar Tarjeta Gráfica Ilustrada estilo Ejemplo (Vertical)
+  renderizarCanvasTarjetaIlustrada(destinatario, edad, mensajeGeneradoActual, remitente);
+}
+
+function renderizarCanvasTarjetaIlustrada(destinatario, edad, cuerpoMensaje, remitente) {
+  const canvas = document.getElementById('canvas-tarjeta');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  // Fondo suave rosa pastel con textura sutil
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, '#fff5f7');
+  grad.addColorStop(0.5, '#fce7f3');
+  grad.addColorStop(1, '#ffe4e6');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Marco ilustrado suave alrededor
+  ctx.strokeStyle = 'rgba(219, 39, 119, 0.2)';
+  ctx.lineWidth = 12;
+  ctx.strokeRect(30, 30, canvas.width - 60, canvas.height - 60);
+
+  // DIBUJO DE ELEMENTOS ILUSTRADOS (Estrella, Coronita, Corazones, Osito)
+  // Coronita dorada superior
+  ctx.fillStyle = '#f59e0b';
+  ctx.beginPath();
+  ctx.moveTo(canvas.width / 2 - 40, 100);
+  ctx.lineTo(canvas.width / 2 - 20, 130);
+  ctx.lineTo(canvas.width / 2, 95);
+  ctx.lineTo(canvas.width / 2 + 20, 130);
+  ctx.lineTo(canvas.width / 2 + 40, 100);
+  ctx.lineTo(canvas.width / 2 + 30, 140);
+  ctx.lineTo(canvas.width / 2 - 30, 140);
+  ctx.closePath();
+  ctx.fill();
+
+  // Nombre del Destinatario (Ej: Nené!)
+  ctx.fillStyle = '#6b21a8';
+  ctx.font = 'bold 85px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(`${destinatario}!`, canvas.width / 2, 220);
+
+  // Subtítulo con edad (Ej: hoy cumples 12 añitos)
+  if (edad) {
+    ctx.fillStyle = '#9d174d';
+    ctx.font = 'bold 38px sans-serif';
+    ctx.fillText(`✨ hoy cumples ${edad} ✨`, canvas.width / 2, 280);
+  }
+
+  // Corazones decorativos
+  ctx.fillStyle = '#f43f5e';
+  ctx.beginPath();
+  ctx.arc(120, 180, 25, 0, Math.PI * 2);
+  ctx.arc(canvas.width - 120, 200, 35, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Texto del Cuerpo de la Dedicatoria
+  ctx.fillStyle = '#1e293b';
+  ctx.font = '30px sans-serif';
+  ctx.textAlign = 'center';
+
+  const palabras = cuerpoMensaje.split(' ');
+  let linea = '';
+  let y = 370;
+  const maxWidth = canvas.width - 180;
+  const lineHeight = 46;
+
+  for (let i = 0; i < palabras.length; i++) {
+    const testLinea = linea + palabras[i] + ' ';
+    const metrics = ctx.measureText(testLinea);
+    if (metrics.width > maxWidth && i > 0) {
+      ctx.fillText(linea, canvas.width / 2, y);
+      linea = palabras[i] + ' ';
+      y += lineHeight;
+    } else {
+      linea = testLinea;
+    }
+  }
+  ctx.fillText(linea, canvas.width / 2, y);
+
+  // Bloque inferior de firma y felicitación
+  const yBottom = Math.max(y + 80, 920);
+
+  // Mensaje "Te amamos con el alma ❤️"
+  ctx.fillStyle = '#db2777';
+  ctx.font = 'bold 42px sans-serif';
+  ctx.fillText(`Te amamos con el alma ❤️`, canvas.width / 2, yBottom);
+
+  ctx.fillStyle = '#7e22ce';
+  ctx.font = 'bold 50px sans-serif';
+  ctx.fillText(`¡Feliz Cumpleaños! 🎉`, canvas.width / 2, yBottom + 80);
+
+  ctx.fillStyle = '#64748b';
+  ctx.font = '24px sans-serif';
+  ctx.fillText(`De: ${remitente} • El Mundo de las Mini Donas`, canvas.width / 2, yBottom + 140);
+
+  // Dibujo ilustrado de Osito con Corazón en esquina inferior izquierda
+  const ositoX = 130;
+  const ositoY = canvas.height - 130;
+  
+  // Cabeza osito
+  ctx.fillStyle = '#d97706';
+  ctx.beginPath();
+  ctx.arc(ositoX, ositoY, 45, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Orejitas
+  ctx.beginPath();
+  ctx.arc(ositoX - 35, ositoY - 35, 18, 0, Math.PI * 2);
+  ctx.arc(ositoX + 35, ositoY - 35, 18, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Corazón que sostiene el osito
+  ctx.fillStyle = '#f43f5e';
+  ctx.beginPath();
+  ctx.arc(ositoX, ositoY + 20, 25, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Convertir canvas a DataURL
+  tarjetaDataUrlActual = canvas.toDataURL('image/png');
+
+  document.getElementById('tarjeta-empty-state').classList.add('hidden');
+  const imgResultado = document.getElementById('tarjeta-imagen-resultado');
+  imgResultado.src = tarjetaDataUrlActual;
+  imgResultado.classList.remove('hidden');
+
+  const acciones = document.getElementById('tarjeta-acciones');
+  acciones.classList.remove('hidden');
+  acciones.classList.add('flex');
+}
+
+function descargarTarjetaImagen() {
+  if (!tarjetaDataUrlActual) return;
+  const a = document.createElement('a');
+  a.href = tarjetaDataUrlActual;
+  a.download = `tarjeta-ilustrada-${Date.now()}.png`;
+  a.click();
+}
+
+function copiarTextoTarjeta() {
+  if (!mensajeGeneradoActual) return;
+  navigator.clipboard.writeText(mensajeGeneradoActual).then(() => {
+    alert('¡Mensaje copiado al portapapeles!');
+  });
 }
 
 // ==========================================
@@ -235,7 +475,7 @@ function obtenerCategoriaSeleccionada() {
 }
 
 // ==========================================
-// MÓDULO: INVENTARIO DE INSUMOS (CON CATEGORÍA)
+// MÓDULO: INVENTARIO DE INSUMOS
 // ==========================================
 function guardarInsumo() {
   const nombre = document.getElementById('insumo-nombre').value;
@@ -489,6 +729,7 @@ function registrarVenta() {
   const destinatario = document.getElementById('venta-destinatario').value.trim() || 'No especificado';
   const direccion = document.getElementById('venta-direccion').value.trim() || 'No especificada';
   const telefono = document.getElementById('venta-telefono').value.trim() || 'Sin teléfono';
+  const dedicatoria = document.getElementById('venta-dedicatoria').value.trim() || '';
 
   const prodObj = catalogo.find(c => c.id === prodId);
   if (!prodObj) {
@@ -507,6 +748,7 @@ function registrarVenta() {
     destinatario,
     direccion,
     telefono,
+    dedicatoria,
     producto: prodObj.nombre,
     cantidad: cant,
     totalCobrado: prodObj.precioVenta * cant,
@@ -522,6 +764,7 @@ function registrarVenta() {
   document.getElementById('venta-destinatario').value = '';
   document.getElementById('venta-direccion').value = '';
   document.getElementById('venta-telefono').value = '';
+  document.getElementById('venta-dedicatoria').value = '';
 }
 
 function renderVentas() {
@@ -542,6 +785,7 @@ function renderVentas() {
         <div class="font-semibold text-slate-900">${v.destinatario}</div>
         <div class="text-slate-500">${v.direccion}</div>
         <div class="text-pink-600 font-medium">${v.telefono}</div>
+        ${v.dedicatoria ? `<div class="text-[10px] text-pink-500 italic mt-0.5 truncate max-w-xs">💌 "${v.dedicatoria}"</div>` : ''}
       </td>
       <td class="p-4 text-sm font-semibold text-slate-800">${v.cantidad}x ${v.producto}</td>
       <td class="p-4 text-xs">
@@ -586,13 +830,18 @@ function enviarPedidoWhatsApp(id) {
   const v = ventas.find(v => v.id === id);
   if (!v) return;
 
-  const mensaje = `🎁 *NUEVO PEDIDO - EL MUNDO DE LAS MINI DONAS* 🍩\n\n` +
+  let mensaje = `🎁 *NUEVO PEDIDO - EL MUNDO DE LAS MINI DONAS* 🍩\n\n` +
     `🗓 *Fecha de Entrega:* ${v.fecha}\n` +
     `⏰ *Franja Horaria:* ${v.horario}\n\n` +
     `👤 *Homenajeado(a):* ${v.destinatario}\n` +
     `📍 *Dirección:* ${v.direccion}\n` +
-    `📞 *Teléfono:* ${v.telefono}\n\n` +
-    `📦 *Detalle del Pedido:*\n` +
+    `📞 *Teléfono:* ${v.telefono}\n\n`;
+
+  if (v.dedicatoria) {
+    mensaje += `💌 *Dedicatoria / Tarjeta:*\n"${v.dedicatoria}"\n\n`;
+  }
+
+  mensaje += `📦 *Detalle del Pedido:*\n` +
     `- ${v.cantidad}x ${v.producto}\n\n` +
     `💰 *Total a Cancelar:* $${v.totalCobrado.toLocaleString()}\n\n` +
     `¡Gracias por elegirnos! ❤️`;
@@ -616,6 +865,15 @@ function abrirModalRecibo(id) {
   document.getElementById('rec-telefono').innerText = v.telefono;
   document.getElementById('rec-producto').innerText = `${v.cantidad}x ${v.producto}`;
   document.getElementById('rec-total').innerText = `$${v.totalCobrado.toLocaleString()}`;
+
+  const dedicatoriaWrapper = document.getElementById('rec-dedicatoria-wrapper');
+  const dedicatoriaSpan = document.getElementById('rec-dedicatoria');
+  if (v.dedicatoria) {
+    dedicatoriaSpan.innerText = `"${v.dedicatoria}"`;
+    dedicatoriaWrapper.classList.remove('hidden');
+  } else {
+    dedicatoriaWrapper.classList.add('hidden');
+  }
 
   document.getElementById('modal-recibo').classList.remove('hidden');
 }
@@ -707,4 +965,3 @@ function renderDashboard() {
     });
   }
 }
-

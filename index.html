@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>El Mundo de las Mini Donas y los Detalles - Sistema de Gestión</title>
   
-  <!-- Configuración PWA (Aplicación Instalable) -->
+  <!-- Configuración PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#db2777">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -39,7 +39,6 @@
         <p class="text-xs text-slate-500 font-medium">Plataforma Privada de Gestión & Costeo</p>
       </div>
 
-      <!-- Formulario de ingreso -->
       <form id="login-form" class="space-y-4 text-left">
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Correo Electrónico</label>
@@ -54,7 +53,6 @@
         </button>
       </form>
 
-      <!-- Copyright en Pantalla de Login -->
       <div class="pt-4 border-t border-pink-100 text-[10px] text-slate-400">
         © 2026 <strong>Brissa Higuita Patiño</strong>. Software Privado de Uso Interno.
       </div>
@@ -66,7 +64,7 @@
   <!-- ========================================== -->
   <div id="app-container" class="hidden min-h-screen flex flex-col md:flex-row">
 
-    <!-- ENCABEZADO SUPERIOR MÓVIL (Solo visible en dispositivos móviles/pantallas pequeñas) -->
+    <!-- ENCABEZADO SUPERIOR MÓVIL -->
     <header class="md:hidden sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-pink-200 px-4 py-3 flex items-center justify-between shadow-sm">
       <div class="flex items-center gap-2.5">
         <div class="w-7 h-7 rounded-lg bg-pink-500/10 text-pink-600 flex items-center justify-center">
@@ -79,45 +77,48 @@
       </button>
     </header>
 
-    <!-- BARRA DE NAVEGACIÓN INFERIOR MÓVIL (Solo visible en pantallas pequeñas) -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-pink-200 px-2 py-1.5 flex justify-around items-center shadow-lg">
-      <button data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+    <!-- BARRA DE NAVEGACIÓN INFERIOR MÓVIL -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-pink-200 px-1 py-1.5 flex justify-around items-center shadow-lg">
+      <button data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
         <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
         <span class="text-[9px] font-semibold mt-0.5">Inicio</span>
       </button>
-      <button data-tab="tab-insumos" onclick="switchTab('tab-insumos')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+      <button data-tab="tab-insumos" onclick="switchTab('tab-insumos')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
         <i data-lucide="box" class="w-5 h-5"></i>
         <span class="text-[9px] font-semibold mt-0.5">Insumos</span>
       </button>
-      <button data-tab="tab-gastos" onclick="switchTab('tab-gastos')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+      <button data-tab="tab-gastos" onclick="switchTab('tab-gastos')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
         <i data-lucide="wallet" class="w-5 h-5"></i>
         <span class="text-[9px] font-semibold mt-0.5">Gastos</span>
       </button>
-      <button data-tab="tab-calculadora" onclick="switchTab('tab-calculadora')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+      <button data-tab="tab-calculadora" onclick="switchTab('tab-calculadora')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
         <i data-lucide="calculator" class="w-5 h-5"></i>
         <span class="text-[9px] font-semibold mt-0.5">Recetas</span>
       </button>
-      <button data-tab="tab-catalogo" onclick="switchTab('tab-catalogo')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+      <button data-tab="tab-catalogo" onclick="switchTab('tab-catalogo')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
         <i data-lucide="shopping-bag" class="w-5 h-5"></i>
         <span class="text-[9px] font-semibold mt-0.5">Catálogo</span>
       </button>
-      <button data-tab="tab-ventas" onclick="switchTab('tab-ventas')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+      <button data-tab="tab-ventas" onclick="switchTab('tab-ventas')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-slate-500 hover:text-pink-600">
         <i data-lucide="truck" class="w-5 h-5"></i>
         <span class="text-[9px] font-semibold mt-0.5">Pedidos</span>
       </button>
+      <button data-tab="tab-tarjetas-ia" onclick="switchTab('tab-tarjetas-ia')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-1 text-pink-600 hover:text-pink-700">
+        <i data-lucide="sparkles" class="w-5 h-5"></i>
+        <span class="text-[9px] font-bold mt-0.5">Tarjetas IA</span>
+      </button>
     </nav>
 
-    <!-- MENÚ LATERAL DESKTOP & TABLET (Visible en pantallas medianas y grandes) -->
+    <!-- MENÚ LATERAL DESKTOP & TABLET -->
     <aside class="hidden md:flex w-64 bg-white/90 backdrop-blur-md border-r border-pink-200/80 flex-col justify-between shrink-0 shadow-sm">
       <div>
         <div class="h-16 flex items-center gap-3 px-6 border-b border-pink-100">
           <div class="w-8 h-8 rounded-xl bg-pink-500/10 text-pink-600 flex items-center justify-center">
             <i data-lucide="cake" class="w-5 h-5"></i>
           </div>
-          <span class="font-bold text-slate-800 tracking-wide text-xs">El Mundo de las Mini Donas y los Detalles</span>
+          <span class="font-bold text-slate-800 tracking-wide text-xs">Mini Donas Manizales</span>
         </div>
 
-        <!-- Botones de Navegación del Menú Lateral -->
         <nav class="p-4 space-y-1.5">
           <button data-tab="tab-dashboard" id="nav-tab-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-slate-600 hover:text-pink-600 hover:bg-pink-50">
             <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard / Informes
@@ -137,10 +138,12 @@
           <button data-tab="tab-ventas" id="nav-tab-ventas" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-slate-600 hover:text-pink-600 hover:bg-pink-50">
             <i data-lucide="truck" class="w-4 h-4"></i> Pedidos y Logística
           </button>
+          <button data-tab="tab-tarjetas-ia" id="nav-tab-tarjetas-ia" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-bold transition text-pink-600 bg-pink-50 hover:bg-pink-100">
+            <i data-lucide="sparkles" class="w-4 h-4 text-pink-600"></i> Tarjetas & Dedicatorias IA
+          </button>
         </nav>
       </div>
 
-      <!-- Usuario y Derechos en Sidebar -->
       <div>
         <div class="p-4 border-t border-pink-100 flex items-center justify-between bg-pink-50/40">
           <div class="flex items-center gap-3">
@@ -160,17 +163,16 @@
       </div>
     </aside>
 
-    <!-- ÁREA DE CONTENIDO PRINCIPAL ADAPTATIVA -->
+    <!-- ÁREA DE CONTENIDO PRINCIPAL -->
     <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 space-y-6 md:space-y-8 flex flex-col justify-between">
 
       <div class="space-y-6 md:space-y-8">
-        <!-- PESTAÑA 1: DASHBOARD -->
+        <!-- PESTAÑAS ANTERIORES SE MANTIENEN IGUAL (DASHBOARD, INSUMOS, GASTOS, CALCULADORA, CATÁLOGO, VENTAS) -->
         <section id="tab-dashboard" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Resumen General de Rendimiento</h2>
             <p class="text-xs text-slate-600 font-medium">Análisis financiero: ventas, ganancias brutas, gastos operativos y utilidad neta real</p>
           </div>
-
           <div class="p-4 bg-white/85 backdrop-blur-md border border-pink-200/80 rounded-3xl shadow-sm flex flex-col sm:flex-row items-end gap-3 sm:gap-4">
             <div class="w-full sm:w-auto flex-1">
               <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha Inicio</label>
@@ -184,7 +186,6 @@
               <button onclick="limpiarFiltroFechas()" class="w-full sm:w-auto px-4 py-2 bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold rounded-xl text-xs transition">Limpiar Filtro</button>
             </div>
           </div>
-
           <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
             <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
               <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Ventas Brutas</div>
@@ -207,7 +208,6 @@
               <div id="kpi-pedidos-count" class="text-lg sm:text-2xl font-black text-slate-900">0</div>
             </div>
           </div>
-
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
               <h3 class="text-xs sm:text-sm font-bold text-slate-800 mb-4">Balance Financiero (Ingresos vs Utilidad Real)</h3>
@@ -220,13 +220,12 @@
           </div>
         </section>
 
-        <!-- PESTAÑA 2: INVENTARIO -->
+        <!-- INVENTARIO -->
         <section id="tab-insumos" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Inventario de Insumos y Materiales</h2>
             <p class="text-xs text-slate-600 font-medium">Organiza tus ingredientes por categorías para calcular sus costos</p>
           </div>
-
           <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
             <h3 class="text-xs sm:text-sm font-bold text-slate-800">Registrar Nuevo Material o Ingrediente</h3>
             <form id="form-insumo" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
@@ -264,7 +263,6 @@
               </div>
             </form>
           </div>
-
           <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
             <table class="w-full text-left text-sm min-w-[650px]">
               <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
@@ -282,13 +280,12 @@
           </div>
         </section>
 
-        <!-- PESTAÑA 3: GASTOS OPERATIVOS -->
+        <!-- GASTOS OPERATIVOS -->
         <section id="tab-gastos" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Control de Gastos Operativos</h2>
             <p class="text-xs text-slate-600 font-medium">Registra tus costos fijos mensuales para calcular tu ganancia real</p>
           </div>
-
           <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
             <h3 class="text-xs sm:text-sm font-bold text-slate-800">Registrar Nuevo Gasto Operativo</h3>
             <form id="form-gasto" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -309,7 +306,6 @@
               </div>
             </form>
           </div>
-
           <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
             <table class="w-full text-left text-sm min-w-[500px]">
               <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
@@ -325,13 +321,12 @@
           </div>
         </section>
 
-        <!-- PESTAÑA 4: CALCULADORA -->
+        <!-- CALCULADORA -->
         <section id="tab-calculadora" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Calculadora & Cotizador Comercial</h2>
             <p class="text-xs text-slate-600 font-medium">Arma recetas, calcula precios o genera cotizaciones instantáneas para clientes</p>
           </div>
-
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-6">
               <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -396,7 +391,7 @@
           </div>
         </section>
 
-        <!-- PESTAÑA 5: CATÁLOGO -->
+        <!-- CATÁLOGO -->
         <section id="tab-catalogo" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Catálogo de Productos Guardados</h2>
@@ -406,13 +401,12 @@
           <div id="catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
         </section>
 
-        <!-- PESTAÑA 6: LOGÍSTICA DE PEDIDOS -->
+        <!-- PEDIDOS Y LOGÍSTICA -->
         <section id="tab-ventas" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Agenda de Pedidos y Logística de Entregas</h2>
             <p class="text-xs text-slate-600 font-medium">Controla destinatarios, horarios y genera recibos o comprobantes de venta</p>
           </div>
-
           <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
             <h3 class="text-xs sm:text-sm font-bold text-slate-800">Registrar Nuevo Pedido / Venta</h3>
             <form id="form-venta" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -449,12 +443,15 @@
                 <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono de Contacto</label>
                 <input type="text" id="venta-telefono" placeholder="Ej: 3052201454" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
               </div>
-              <div class="flex items-end pt-2 sm:pt-0">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Dedicatoria / Tarjeta Asociada (Opcional)</label>
+                <input type="text" id="venta-dedicatoria" placeholder="Ej: Con todo mi amor en tu día especial..." class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div class="sm:col-span-2 flex items-end pt-2 sm:pt-0">
                 <button type="submit" class="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-sm transition shadow-md shadow-pink-600/20">Registrar Pedido</button>
               </div>
             </form>
           </div>
-
           <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
             <table class="w-full text-left text-sm min-w-[850px]">
               <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
@@ -471,9 +468,140 @@
             </table>
           </div>
         </section>
+
+        <!-- PESTAÑA 7: GENERADOR DE TARJETAS & DEDICATORIAS CON IA -->
+        <section id="tab-tarjetas-ia" class="tab-content hidden space-y-6">
+          <div class="p-6 bg-gradient-to-r from-pink-500 to-rose-400 rounded-3xl text-white shadow-lg shadow-pink-500/15 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="space-y-1 text-center sm:text-left">
+              <h2 class="text-xl sm:text-2xl font-black tracking-tight">Generador de Tarjetas & Dedicatorias con IA</h2>
+              <p class="text-xs sm:text-sm opacity-90 font-medium">Crea mensajes emotivos y genera la tarjeta gráfica infantil/ilustrada lista para imprimir.</p>
+            </div>
+            <div class="flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-2xl text-xs font-bold shrink-0">
+              <i data-lucide="sparkles" class="w-4 h-4"></i> Gemini AI
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <!-- Izquierda: Formulario Redactor & Prompt Personalizado -->
+            <div class="lg:col-span-5 bg-white/90 backdrop-blur-md border border-pink-200/80 p-6 rounded-3xl shadow-sm space-y-5">
+              <div class="border-b border-pink-100 pb-3 flex items-center justify-between">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                  <i data-lucide="pen-tool" class="w-4 h-4 text-pink-600"></i> Redactor & Generador de Prompts
+                </h3>
+                <span class="text-[10px] uppercase font-bold text-pink-600 bg-pink-100 px-2 py-0.5 rounded-full">Gemini Pro</span>
+              </div>
+
+              <!-- Estilo Visual Prediseñado de la Tarjeta -->
+              <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-700">Estilo Visual de la Tarjeta</label>
+                <div class="grid grid-cols-2 gap-2">
+                  <button type="button" onclick="seleccionarEstiloTarjeta('infantil')" id="btn-estilo-infantil" class="p-2.5 bg-pink-100 border-2 border-pink-500 rounded-xl text-left text-xs font-bold text-pink-700 transition flex items-center gap-2 shadow-sm">
+                    <span class="text-base">🧸</span> Infantil / Osito
+                  </button>
+                  <button type="button" onclick="seleccionarEstiloTarjeta('elegante')" id="btn-estilo-elegante" class="p-2.5 bg-pink-50 border border-pink-200 rounded-xl text-left text-xs font-semibold text-slate-700 transition flex items-center gap-2">
+                    <span class="text-base">✨</span> Elegante / Rosa
+                  </button>
+                  <button type="button" onclick="seleccionarEstiloTarjeta('fiesta')" id="btn-estilo-fiesta" class="p-2.5 bg-pink-50 border border-pink-200 rounded-xl text-left text-xs font-semibold text-slate-700 transition flex items-center gap-2">
+                    <span class="text-base">🎉</span> Fiesta / Globos
+                  </button>
+                  <button type="button" onclick="seleccionarEstiloTarjeta('amor')" id="btn-estilo-amor" class="p-2.5 bg-pink-50 border border-pink-200 rounded-xl text-left text-xs font-semibold text-slate-700 transition flex items-center gap-2">
+                    <span class="text-base">💖</span> Amor / Corazones
+                  </button>
+                </div>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Ocasión Especial</label>
+                  <select id="ia-ocasion" class="w-full px-3 py-2.5 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500 font-medium">
+                    <option value="Cumpleaños">🎂 Cumpleaños</option>
+                    <option value="Aniversario">💖 Aniversario</option>
+                    <option value="Amor y Amistad">💌 Amor y Amistad</option>
+                    <option value="Agradecimiento">🌸 Agradecimiento</option>
+                    <option value="Perdón / Reconciliación">🌷 Perdón / Reconciliación</option>
+                    <option value="Feliz Día General">☀️ Feliz Día / Sorpresa</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Tono del Mensaje</label>
+                  <select id="ia-tono" class="w-full px-3 py-2.5 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500 font-medium">
+                    <option value="Cariñoso y Emotivo"> 🥰 Cariñoso y Emotivo</option>
+                    <option value="Romántico y Profundo">❤️ Romántico y Profundo</option>
+                    <option value="Divertido y Alegre">🎉 Divertido y Alegre</option>
+                    <option value="Formal y Elegante">✨ Formal y Elegante</option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Destinatario</label>
+                    <input type="text" id="ia-destinatario-nombre" placeholder="Ej: Nené" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500">
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Edad (Opcional)</label>
+                    <input type="text" id="ia-edad" placeholder="Ej: 12 añitos" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre de quien envía</label>
+                  <input type="text" id="ia-remitente-nombre" placeholder="Ej: Papá y Mamá" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500">
+                </div>
+
+                <!-- Campo de Prompt Personalizado para Generación de la Imagen -->
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <label class="block text-xs font-semibold text-slate-600">Prompt Personalizado para la Imagen (IA)</label>
+                    <button type="button" onclick="autoGenerarPrompt()" class="text-[10px] font-bold text-pink-600 hover:underline">Auto-Redactar Prompt</button>
+                  </div>
+                  <textarea id="ia-prompt-imagen" rows="3" placeholder="Ej: Ilustración infantil en acuarela con fondo rosa pastel, osito abrazando corazón, globos, estrellitas..." class="w-full p-2.5 bg-pink-50/50 border border-pink-200 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-pink-500 resize-none"></textarea>
+                </div>
+
+                <button onclick="generarDedicatoriaYTarjetaIA()" class="w-full py-3.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-xs transition shadow-md shadow-pink-600/20 flex items-center justify-center gap-2">
+                  <i data-lucide="sparkles" class="w-4 h-4"></i> Generar Dedicatoria & Tarjeta Gráfica
+                </button>
+              </div>
+            </div>
+
+            <!-- Derecha: Vista Previa y Creación de Tarjeta Gráfica -->
+            <div class="lg:col-span-7 bg-white/90 backdrop-blur-md border border-pink-200/80 p-6 rounded-3xl shadow-sm space-y-6">
+              <div class="border-b border-pink-100 pb-3 flex items-center justify-between">
+                <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                  <i data-lucide="image" class="w-4 h-4 text-pink-600"></i> Tarjeta Gráfica Imprimible
+                </h3>
+                <span class="text-[10px] text-pink-600 bg-pink-100 font-bold px-2 py-0.5 rounded-full">Listo para Descargar</span>
+              </div>
+
+              <!-- Canvas Oculto para Generar la Imagen -->
+              <canvas id="canvas-tarjeta" class="hidden" width="800" height="1200"></canvas>
+
+              <!-- Contenedor Visual de la Tarjeta Generada -->
+              <div id="tarjeta-preview-container" class="relative w-full aspect-[2/3] bg-pink-50/60 border-2 border-dashed border-pink-200 rounded-3xl flex flex-col items-center justify-center p-4 text-center overflow-hidden shadow-inner max-h-[600px] mx-auto">
+                <div id="tarjeta-empty-state" class="space-y-3">
+                  <div class="w-14 h-14 mx-auto rounded-full bg-pink-100 text-pink-500 flex items-center justify-center">
+                    <i data-lucide="image-plus" class="w-7 h-7"></i>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-500 max-w-xs">Haz clic en "Generar Dedicatoria & Tarjeta Gráfica" para crear tu diseño infantil e imprimible.</p>
+                </div>
+                <img id="tarjeta-imagen-resultado" src="" alt="Tarjeta Gráfica" class="hidden w-full h-full object-contain rounded-2xl shadow-md">
+              </div>
+
+              <!-- Botones de Acción de la Tarjeta -->
+              <div id="tarjeta-acciones" class="hidden flex flex-wrap gap-2 pt-2">
+                <button onclick="descargarTarjetaImagen()" class="flex-1 py-3 bg-pink-600 hover:bg-pink-500 font-bold text-white text-xs rounded-xl transition shadow-md flex items-center justify-center gap-2">
+                  <i data-lucide="download" class="w-4 h-4"></i> Descargar Imagen PNG
+                </button>
+                <button onclick="copiarTextoTarjeta()" class="px-5 py-3 bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold text-xs rounded-xl transition flex items-center justify-center gap-2">
+                  <i data-lucide="copy" class="w-4 h-4"></i> Copiar Mensaje
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
 
-      <!-- FOOTER GENERAL DE DERECHOS DE AUTOR -->
+      <!-- FOOTER GENERAL -->
       <footer class="mt-8 pt-4 border-t border-pink-200/60 text-center text-xs text-slate-500 mb-12 md:mb-0">
         <p>© 2026 <strong>Brissa Higuita Patiño</strong>. Todos los derechos reservados.</p>
         <p class="text-[10px] text-slate-400 mt-0.5">El Mundo de las Mini Donas • Manizales, Caldas, Colombia</p>
@@ -497,6 +625,9 @@
           <div><strong class="text-slate-800">Homenajeado(a):</strong> <span id="rec-destinatario"></span></div>
           <div><strong class="text-slate-800">Dirección:</strong> <span id="rec-direccion"></span></div>
           <div><strong class="text-slate-800">Teléfono:</strong> <span id="rec-telefono"></span></div>
+          <div id="rec-dedicatoria-wrapper" class="hidden pt-1 mt-1 border-t border-dashed border-pink-200">
+            <strong class="text-slate-800">Dedicatoria / Tarjeta:</strong> <span id="rec-dedicatoria" class="italic text-pink-600"></span>
+          </div>
         </div>
         <div class="border-t border-b border-pink-100 py-3 text-xs space-y-2">
           <div class="flex justify-between font-bold text-slate-800">
@@ -518,17 +649,6 @@
       </div>
     </div>
   </div>
-
-  <!-- REGISTRO DEL SERVICE WORKER (PWA) -->
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then((reg) => console.log('PWA Service Worker listo:', reg.scope))
-          .catch((err) => console.log('Error PWA Service Worker:', err));
-      });
-    }
-  </script>
 
   <script src="app.js"></script>
 </body>
