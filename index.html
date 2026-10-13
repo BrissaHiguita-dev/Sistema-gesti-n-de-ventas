@@ -2,37 +2,45 @@
 <html lang="es" class="h-full bg-pink-50 text-slate-800">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>El Mundo de las Mini Donas y los Detalles - Sistema de Gestión</title>
   
-  <!-- Tailwind CSS via CDN -->
+  <!-- Configuración PWA (Aplicación Instalable) -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#db2777">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Mini Donas">
+
+  <!-- Framework CSS Tailwind (vía CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Hoja de Estilos CSS Personalizada -->
+  <!-- Hoja de Estilos Personalizada -->
   <link rel="stylesheet" href="styles.css">
   
-  <!-- Chart.js para Gráficos Estadísticos -->
+  <!-- Chart.js para Gráficos Financieros -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
-  <!-- Lucide Icons -->
+  <!-- Librería de Iconografía Lucide -->
   <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="h-full font-sans antialiased overflow-x-hidden">
+<body class="h-full font-sans antialiased overflow-x-hidden pb-16 md:pb-0">
 
   <!-- ========================================== -->
-  <!-- PANTALLA DE INICIO DE SESIÓN (LOGIN)      -->
+  <!-- PANTALLA DE LOGIN CON AVISO DE DERECHOS    -->
   <!-- ========================================== -->
   <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-pink-950/40 backdrop-blur-md p-4">
-    <div class="w-full max-w-md p-8 bg-white/95 border border-pink-200 rounded-3xl shadow-2xl space-y-6">
-      <div class="text-center space-y-2">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-pink-500/10 text-pink-600 mb-2">
-          <i data-lucide="cake" class="w-8 h-8"></i>
+    <div class="w-full max-w-md p-6 sm:p-8 bg-white/95 border border-pink-200 rounded-3xl shadow-2xl space-y-6 text-center">
+      <div class="space-y-2">
+        <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-pink-500/10 text-pink-600 mb-1">
+          <i data-lucide="cake" class="w-7 h-7"></i>
         </div>
-        <h1 class="text-2xl font-bold tracking-tight text-slate-900">El Mundo de las Mini Donas y los Detalles</h1>
-        <p class="text-xs text-slate-500 font-medium">Plataforma de Costeo y Gestión de Pedidos</p>
+        <h1 class="text-xl sm:text-2xl font-bold tracking-tight text-slate-900">El Mundo de las Mini Donas y los Detalles</h1>
+        <p class="text-xs text-slate-500 font-medium">Plataforma Privada de Gestión & Costeo</p>
       </div>
 
-      <form id="login-form" class="space-y-4">
+      <!-- Formulario de ingreso -->
+      <form id="login-form" class="space-y-4 text-left">
         <div>
           <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-1">Correo Electrónico</label>
           <input type="email" id="login-email" required value="admin@negocio.com" class="w-full px-4 py-2.5 bg-pink-50/50 border border-pink-200 rounded-xl focus:outline-none focus:border-pink-500 text-sm text-slate-800">
@@ -45,16 +53,62 @@
           Ingresar al Sistema
         </button>
       </form>
+
+      <!-- Copyright en Pantalla de Login -->
+      <div class="pt-4 border-t border-pink-100 text-[10px] text-slate-400">
+        © 2026 <strong>Brissa Higuita Patiño</strong>. Software Privado de Uso Interno.
+      </div>
     </div>
   </div>
 
   <!-- ========================================== -->
-  <!-- CONTENEDOR PRINCIPAL DE LA APP             -->
+  <!-- ESTRUCTURA DE LA APLICACIÓN PRINCIPAL      -->
   <!-- ========================================== -->
   <div id="app-container" class="hidden min-h-screen flex flex-col md:flex-row">
 
-    <!-- MENÚ LATERAL (SIDEBAR) -->
-    <aside class="w-full md:w-64 bg-white/90 backdrop-blur-md border-r border-pink-200/80 flex flex-col justify-between shrink-0 shadow-sm">
+    <!-- ENCABEZADO SUPERIOR MÓVIL (Solo visible en dispositivos móviles/pantallas pequeñas) -->
+    <header class="md:hidden sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-pink-200 px-4 py-3 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-2.5">
+        <div class="w-7 h-7 rounded-lg bg-pink-500/10 text-pink-600 flex items-center justify-center">
+          <i data-lucide="cake" class="w-4 h-4"></i>
+        </div>
+        <span class="font-black text-slate-800 tracking-wide text-xs">El Mundo de las Mini Donas y los Detalles</span>
+      </div>
+      <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-500 p-1" title="Cerrar Sesión">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+      </button>
+    </header>
+
+    <!-- BARRA DE NAVEGACIÓN INFERIOR MÓVIL (Solo visible en pantallas pequeñas) -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-pink-200 px-2 py-1.5 flex justify-around items-center shadow-lg">
+      <button data-tab="tab-dashboard" onclick="switchTab('tab-dashboard')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+        <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Inicio</span>
+      </button>
+      <button data-tab="tab-insumos" onclick="switchTab('tab-insumos')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+        <i data-lucide="box" class="w-5 h-5"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Insumos</span>
+      </button>
+      <button data-tab="tab-gastos" onclick="switchTab('tab-gastos')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+        <i data-lucide="wallet" class="w-5 h-5"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Gastos</span>
+      </button>
+      <button data-tab="tab-calculadora" onclick="switchTab('tab-calculadora')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+        <i data-lucide="calculator" class="w-5 h-5"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Recetas</span>
+      </button>
+      <button data-tab="tab-catalogo" onclick="switchTab('tab-catalogo')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+        <i data-lucide="shopping-bag" class="w-5 h-5"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Catálogo</span>
+      </button>
+      <button data-tab="tab-ventas" onclick="switchTab('tab-ventas')" class="nav-btn-mobile flex flex-col items-center justify-center py-1 px-2 text-slate-500 hover:text-pink-600">
+        <i data-lucide="truck" class="w-5 h-5"></i>
+        <span class="text-[9px] font-semibold mt-0.5">Pedidos</span>
+      </button>
+    </nav>
+
+    <!-- MENÚ LATERAL DESKTOP & TABLET (Visible en pantallas medianas y grandes) -->
+    <aside class="hidden md:flex w-64 bg-white/90 backdrop-blur-md border-r border-pink-200/80 flex-col justify-between shrink-0 shadow-sm">
       <div>
         <div class="h-16 flex items-center gap-3 px-6 border-b border-pink-100">
           <div class="w-8 h-8 rounded-xl bg-pink-500/10 text-pink-600 flex items-center justify-center">
@@ -63,6 +117,7 @@
           <span class="font-bold text-slate-800 tracking-wide text-xs">El Mundo de las Mini Donas y los Detalles</span>
         </div>
 
+        <!-- Botones de Navegación del Menú Lateral -->
         <nav class="p-4 space-y-1.5">
           <button data-tab="tab-dashboard" id="nav-tab-dashboard" class="nav-btn w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition text-slate-600 hover:text-pink-600 hover:bg-pink-50">
             <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard / Informes
@@ -85,342 +140,356 @@
         </nav>
       </div>
 
-      <div class="p-4 border-t border-pink-100 flex items-center justify-between bg-pink-50/40">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-pink-600 text-white flex items-center justify-center font-bold text-xs">MD</div>
-          <div class="text-xs">
-            <div class="font-bold text-slate-800">Administradora</div>
-            <div class="text-pink-600 font-medium">Manizales, Caldas</div>
+      <!-- Usuario y Derechos en Sidebar -->
+      <div>
+        <div class="p-4 border-t border-pink-100 flex items-center justify-between bg-pink-50/40">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-full bg-pink-600 text-white flex items-center justify-center font-bold text-xs">MD</div>
+            <div class="text-xs">
+              <div class="font-bold text-slate-800">Administradora</div>
+              <div class="text-pink-600 font-medium">Manizales, Caldas</div>
+            </div>
           </div>
+          <button onclick="handleLogout()" class="text-slate-400 hover:text-rose-500 p-1.5 rounded-lg transition" title="Cerrar Sesión">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
         </div>
-        <button id="logout-btn" class="text-slate-400 hover:text-rose-500 p-1.5 rounded-lg transition" title="Cerrar Sesión">
-          <i data-lucide="log-out" class="w-4 h-4"></i>
-        </button>
+        <div class="px-4 py-2 bg-pink-100/60 text-[10px] text-slate-500 text-center font-medium border-t border-pink-200/50">
+          © 2026 Brissa Higuita Patiño
+        </div>
       </div>
     </aside>
 
-    <!-- ÁREA DE CONTENIDO PRINCIPAL -->
-    <main class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8">
+    <!-- ÁREA DE CONTENIDO PRINCIPAL ADAPTATIVA -->
+    <main class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-10 space-y-6 md:space-y-8 flex flex-col justify-between">
 
-      <!-- PESTAÑA: DASHBOARD -->
-      <section id="tab-dashboard" class="tab-content hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900">Resumen General de Rendimiento</h2>
-          <p class="text-xs text-slate-600 font-medium">Análisis financiero: ventas, ganancias brutas, gastos operativos y utilidad neta real</p>
-        </div>
-
-        <div class="p-4 bg-white/85 backdrop-blur-md border border-pink-200/80 rounded-3xl shadow-sm flex flex-col sm:flex-row items-end gap-4">
-          <div class="w-full sm:w-auto flex-1">
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha Inicio</label>
-            <input type="date" id="dash-fecha-inicio" onchange="renderDashboard()" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
+      <div class="space-y-6 md:space-y-8">
+        <!-- PESTAÑA 1: DASHBOARD -->
+        <section id="tab-dashboard" class="tab-content hidden space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Resumen General de Rendimiento</h2>
+            <p class="text-xs text-slate-600 font-medium">Análisis financiero: ventas, ganancias brutas, gastos operativos y utilidad neta real</p>
           </div>
-          <div class="w-full sm:w-auto flex-1">
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha Fin</label>
-            <input type="date" id="dash-fecha-fin" onchange="renderDashboard()" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
+
+          <div class="p-4 bg-white/85 backdrop-blur-md border border-pink-200/80 rounded-3xl shadow-sm flex flex-col sm:flex-row items-end gap-3 sm:gap-4">
+            <div class="w-full sm:w-auto flex-1">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha Inicio</label>
+              <input type="date" id="dash-fecha-inicio" onchange="renderDashboard()" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
+            </div>
+            <div class="w-full sm:w-auto flex-1">
+              <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha Fin</label>
+              <input type="date" id="dash-fecha-fin" onchange="renderDashboard()" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
+            </div>
+            <div class="w-full sm:w-auto">
+              <button onclick="limpiarFiltroFechas()" class="w-full sm:w-auto px-4 py-2 bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold rounded-xl text-xs transition">Limpiar Filtro</button>
+            </div>
           </div>
-          <div class="w-full sm:w-auto">
-            <button onclick="limpiarFiltroFechas()" class="w-full sm:w-auto px-4 py-2 bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold rounded-xl text-xs transition">Limpiar Filtro</button>
+
+          <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
+              <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Ventas Brutas</div>
+              <div id="kpi-ventas-totales" class="text-lg sm:text-2xl font-black text-slate-900">$0</div>
+            </div>
+            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
+              <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Ganancia Bruta</div>
+              <div id="kpi-ganancia-total" class="text-lg sm:text-2xl font-black text-pink-600">$0</div>
+            </div>
+            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
+              <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Gastos Operativos</div>
+              <div id="kpi-gastos-totales" class="text-lg sm:text-2xl font-black text-rose-500">$0</div>
+            </div>
+            <div class="p-4 sm:p-5 bg-pink-500 border border-pink-400 rounded-3xl shadow-md text-white col-span-2 sm:col-span-1">
+              <div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1 sm:mb-2 opacity-90">Utilidad Neta Real</div>
+              <div id="kpi-utilidad-neta" class="text-xl sm:text-2xl font-black text-white">$0</div>
+            </div>
+            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm col-span-2 sm:col-span-1">
+              <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Pedidos Realizados</div>
+              <div id="kpi-pedidos-count" class="text-lg sm:text-2xl font-black text-slate-900">0</div>
+            </div>
           </div>
-        </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div class="p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
-            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Ventas Brutas</div>
-            <div id="kpi-ventas-totales" class="text-2xl font-black text-slate-900">$0</div>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-800 mb-4">Balance Financiero (Ingresos vs Utilidad Real)</h3>
+              <div class="h-56 sm:h-64 relative"><canvas id="chart-balance"></canvas></div>
+            </div>
+            <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-800 mb-4">Productos Más Vendidos</h3>
+              <div class="h-56 sm:h-64 relative flex items-center justify-center"><canvas id="chart-populares"></canvas></div>
+            </div>
           </div>
-          <div class="p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
-            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Ganancia Bruta</div>
-            <div id="kpi-ganancia-total" class="text-2xl font-black text-pink-600">$0</div>
+        </section>
+
+        <!-- PESTAÑA 2: INVENTARIO -->
+        <section id="tab-insumos" class="tab-content hidden space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Inventario de Insumos y Materiales</h2>
+            <p class="text-xs text-slate-600 font-medium">Organiza tus ingredientes por categorías para calcular sus costos</p>
           </div>
-          <div class="p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
-            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Gastos Operativos</div>
-            <div id="kpi-gastos-totales" class="text-2xl font-black text-rose-500">$0</div>
-          </div>
-          <div class="p-5 bg-pink-500 border border-pink-400 rounded-3xl shadow-md text-white">
-            <div class="text-xs font-bold uppercase tracking-wider mb-2 opacity-90">Utilidad Neta Real</div>
-            <div id="kpi-utilidad-neta" class="text-2xl font-black text-white">$0</div>
-          </div>
-          <div class="p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
-            <div class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Pedidos Realizados</div>
-            <div id="kpi-pedidos-count" class="text-2xl font-black text-slate-900">0</div>
-          </div>
-        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
-            <h3 class="text-sm font-bold text-slate-800 mb-4">Balance Financiero (Ingresos vs Utilidad Real)</h3>
-            <div class="h-64 relative"><canvas id="chart-balance"></canvas></div>
-          </div>
-          <div class="p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
-            <h3 class="text-sm font-bold text-slate-800 mb-4">Productos Más Vendidos</h3>
-            <div class="h-64 relative flex items-center justify-center"><canvas id="chart-populares"></canvas></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PESTAÑA: INVENTARIO DE INSUMOS -->
-      <section id="tab-insumos" class="tab-content hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900">Inventario de Insumos y Materiales</h2>
-          <p class="text-xs text-slate-600 font-medium">Organiza tus ingredientes por categorías para calcular sus costos</p>
-        </div>
-
-        <div class="p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
-          <h3 class="text-sm font-bold text-slate-800">Registrar Nuevo Material o Ingrediente</h3>
-          <form id="form-insumo" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Insumo</label>
-              <input type="text" id="insumo-nombre" required placeholder="Ej: Nutella 350g" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Categoría</label>
-              <select id="insumo-categoria" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-                <option value="MATERIA PRIMA">Materia Prima</option>
-                <option value="EMPAQUES">Empaques</option>
-                <option value="DECORACION">Decoración</option>
-                <option value="OTROS">Otros</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Comprada</label>
-              <input type="number" id="insumo-cantidad" step="any" required placeholder="Ej: 350" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Unidad de Medida</label>
-              <select id="insumo-unidad" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-                <option value="gramos">Gramos (g)</option>
-                <option value="unidades">Unidades (ud)</option>
-                <option value="mililitros">Mililitros (ml)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Costo Total ($)</label>
-              <input type="number" id="insumo-costo" step="any" required placeholder="Ej: 24500" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div class="lg:col-span-5 flex justify-end">
-              <button type="submit" class="px-6 py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-sm transition shadow-md shadow-pink-600/20">Guardar Insumo</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
-          <table class="w-full text-left text-sm min-w-[700px]">
-            <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
-              <tr>
-                <th class="p-4">Ingrediente</th>
-                <th class="p-4">Categoría</th>
-                <th class="p-4">Presentación</th>
-                <th class="p-4">Costo Compra</th>
-                <th class="p-4">Costo Unitario</th>
-                <th class="p-4 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-insumos-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PESTAÑA: GASTOS OPERATIVOS -->
-      <section id="tab-gastos" class="tab-content hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900">Control de Gastos Operativos</h2>
-          <p class="text-xs text-slate-600 font-medium">Registra tus costos fijos mensuales para calcular tu ganancia real</p>
-        </div>
-
-        <div class="p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
-          <h3 class="text-sm font-bold text-slate-800">Registrar Nuevo Gasto Operativo</h3>
-          <form id="form-gasto" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Concepto del Gasto</label>
-              <input type="text" id="gasto-nombre" required placeholder="Ej: Publicidad Instagram" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Valor del Gasto ($)</label>
-              <input type="number" id="gasto-valor" step="any" required placeholder="Ej: 50000" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha del Gasto</label>
-              <input type="date" id="gasto-fecha" required class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
-            </div>
-            <div class="flex items-end">
-              <button type="submit" class="w-full py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-sm transition shadow-md shadow-rose-500/20">Registrar Gasto</button>
-            </div>
-          </form>
-        </div>
-
-        <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
-          <table class="w-full text-left text-sm min-w-[600px]">
-            <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
-              <tr>
-                <th class="p-4">Fecha</th>
-                <th class="p-4">Concepto</th>
-                <th class="p-4">Valor</th>
-                <th class="p-4 text-right">Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-gastos-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- PESTAÑA: CALCULADORA Y COTIZADOR -->
-      <section id="tab-calculadora" class="tab-content hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900">Calculadora & Cotizador Comercial</h2>
-          <p class="text-xs text-slate-600 font-medium">Arma recetas, calcula precios o genera cotizaciones instantáneas para clientes</p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div class="lg:col-span-2 p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div class="sm:col-span-2">
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Insumo del Inventario</label>
-                <select id="receta-insumo-select" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800"></select>
+          <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
+            <h3 class="text-xs sm:text-sm font-bold text-slate-800">Registrar Nuevo Material o Ingrediente</h3>
+            <form id="form-insumo" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre Insumo</label>
+                <input type="text" id="insumo-nombre" required placeholder="Ej: Nutella 350g" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
               </div>
               <div>
-                <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Usada</label>
-                <div class="flex gap-2">
-                  <input type="number" id="receta-insumo-cant" step="any" placeholder="0" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-                  <button id="add-to-recipe-btn" class="px-4 py-2 bg-pink-100 hover:bg-pink-200 border border-pink-200 text-pink-700 font-bold rounded-xl text-sm transition">+</button>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Categoría</label>
+                <select id="insumo-categoria" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+                  <option value="MATERIA PRIMA">Materia Prima</option>
+                  <option value="EMPAQUES">Empaques</option>
+                  <option value="DECORACION">Decoración</option>
+                  <option value="OTROS">Otros</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Comprada</label>
+                <input type="number" id="insumo-cantidad" step="any" required placeholder="Ej: 350" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Unidad de Medida</label>
+                <select id="insumo-unidad" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+                  <option value="gramos">Gramos (g)</option>
+                  <option value="unidades">Unidades (ud)</option>
+                  <option value="mililitros">Mililitros (ml)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Costo Total ($)</label>
+                <input type="number" id="insumo-costo" step="any" required placeholder="Ej: 24500" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div class="lg:col-span-5 flex justify-end pt-2">
+                <button type="submit" class="w-full sm:w-auto px-6 py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-sm transition shadow-md shadow-pink-600/20">Guardar Insumo</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
+            <table class="w-full text-left text-sm min-w-[650px]">
+              <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
+                <tr>
+                  <th class="p-3 sm:p-4">Ingrediente</th>
+                  <th class="p-3 sm:p-4">Categoría</th>
+                  <th class="p-3 sm:p-4">Presentación</th>
+                  <th class="p-3 sm:p-4">Costo Compra</th>
+                  <th class="p-3 sm:p-4">Costo Unitario</th>
+                  <th class="p-3 sm:p-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-insumos-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- PESTAÑA 3: GASTOS OPERATIVOS -->
+        <section id="tab-gastos" class="tab-content hidden space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Control de Gastos Operativos</h2>
+            <p class="text-xs text-slate-600 font-medium">Registra tus costos fijos mensuales para calcular tu ganancia real</p>
+          </div>
+
+          <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
+            <h3 class="text-xs sm:text-sm font-bold text-slate-800">Registrar Nuevo Gasto Operativo</h3>
+            <form id="form-gasto" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Concepto del Gasto</label>
+                <input type="text" id="gasto-nombre" required placeholder="Ej: Publicidad Instagram" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Valor del Gasto ($)</label>
+                <input type="number" id="gasto-valor" step="any" required placeholder="Ej: 50000" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha del Gasto</label>
+                <input type="date" id="gasto-fecha" required class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
+              </div>
+              <div class="flex items-end pt-2 sm:pt-0">
+                <button type="submit" class="w-full py-2.5 bg-rose-500 hover:bg-rose-600 text-white font-bold rounded-xl text-sm transition shadow-md shadow-rose-500/20">Registrar Gasto</button>
+              </div>
+            </form>
+          </div>
+
+          <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
+            <table class="w-full text-left text-sm min-w-[500px]">
+              <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
+                <tr>
+                  <th class="p-3 sm:p-4">Fecha</th>
+                  <th class="p-3 sm:p-4">Concepto</th>
+                  <th class="p-3 sm:p-4">Valor</th>
+                  <th class="p-3 sm:p-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-gastos-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- PESTAÑA 4: CALCULADORA -->
+        <section id="tab-calculadora" class="tab-content hidden space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Calculadora & Cotizador Comercial</h2>
+            <p class="text-xs text-slate-600 font-medium">Arma recetas, calcula precios o genera cotizaciones instantáneas para clientes</p>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-6">
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Insumo del Inventario</label>
+                  <select id="receta-insumo-select" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800"></select>
                 </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Usada</label>
+                  <div class="flex gap-2">
+                    <input type="number" id="receta-insumo-cant" step="any" placeholder="0" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+                    <button id="add-to-recipe-btn" class="px-4 py-2 bg-pink-100 hover:bg-pink-200 border border-pink-200 text-pink-700 font-bold rounded-xl text-sm transition">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-pink-200 rounded-2xl overflow-x-auto">
+                <table class="w-full text-left text-xs min-w-[350px]">
+                  <thead class="bg-pink-50/80 text-slate-600 border-b border-pink-200">
+                    <tr>
+                      <th class="p-3">Insumo</th>
+                      <th class="p-3">Cantidad</th>
+                      <th class="p-3">Costo Directo</th>
+                      <th class="p-3 text-right">Quitar</th>
+                    </tr>
+                  </thead>
+                  <tbody id="receta-items-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
+                </table>
               </div>
             </div>
 
-            <div class="border border-pink-200 rounded-2xl overflow-x-auto">
-              <table class="w-full text-left text-xs min-w-[400px]">
-                <thead class="bg-pink-50/80 text-slate-600 border-b border-pink-200">
-                  <tr>
-                    <th class="p-3">Insumo</th>
-                    <th class="p-3">Cantidad</th>
-                    <th class="p-3">Costo Directo</th>
-                    <th class="p-3 text-right">Quitar</th>
-                  </tr>
-                </thead>
-                <tbody id="receta-items-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
-              </table>
+            <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-5">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-800">Ajustes Financieros & Cotización</h3>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre del Combo / Producto</label>
+                <input type="text" id="receta-nombre" placeholder="Ej: Desayuno Sorpresa Amor" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Categoría del Producto</label>
+                <select id="receta-categoria" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800"></select>
+                <input type="text" id="receta-nueva-categoria" placeholder="Escribe nueva categoría..." class="hidden mt-2 w-full px-3 py-2 bg-pink-50/50 border border-pink-500 rounded-xl text-sm focus:outline-none text-pink-700">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Costos Indirectos / Empaque ($)</label>
+                <input type="number" id="receta-costos-fijos" value="5000" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Margen de Ganancia Deseado (%)</label>
+                <input type="number" id="receta-margen" value="40" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div class="p-4 bg-pink-50/60 rounded-2xl border border-pink-200 space-y-2">
+                <div class="flex justify-between text-xs text-slate-600"><span>Costo Total:</span><span id="resumen-costo-total" class="font-bold text-slate-800">$0</span></div>
+                <div class="flex justify-between text-sm text-pink-600 font-extrabold"><span>Precio Venta Sugerido:</span><span id="resumen-precio-venta">$0</span></div>
+                <div class="flex justify-between text-xs text-emerald-600 font-bold"><span>Ganancia Neta:</span><span id="resumen-ganancia-limpia">$0</span></div>
+              </div>
+              
+              <div class="flex gap-2">
+                <button id="save-recipe-btn" class="flex-1 py-3 bg-pink-600 hover:bg-pink-500 font-bold rounded-xl text-xs text-white transition shadow-md shadow-pink-600/20">Guardar en Catálogo</button>
+                <button onclick="generarCotizacionRapida()" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-xs text-white transition shadow-md shadow-emerald-600/20" title="Generar Cotización WhatsApp">Cotizar</button>
+              </div>
             </div>
           </div>
+        </section>
 
-          <div class="p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-5">
-            <h3 class="text-sm font-bold text-slate-800">Ajustes Financieros & Cotización</h3>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre del Combo / Producto</label>
-              <input type="text" id="receta-nombre" placeholder="Ej: Desayuno Sorpresa Amor" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Categoría del Producto</label>
-              <select id="receta-categoria" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800"></select>
-              <input type="text" id="receta-nueva-categoria" placeholder="Escribe nueva categoría..." class="hidden mt-2 w-full px-3 py-2 bg-pink-50/50 border border-pink-500 rounded-xl text-sm focus:outline-none text-pink-700">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Costos Indirectos / Empaque ($)</label>
-              <input type="number" id="receta-costos-fijos" value="5000" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Margen de Ganancia Deseado (%)</label>
-              <input type="number" id="receta-margen" value="40" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div class="p-4 bg-pink-50/60 rounded-2xl border border-pink-200 space-y-2">
-              <div class="flex justify-between text-xs text-slate-600"><span>Costo Total:</span><span id="resumen-costo-total" class="font-bold text-slate-800">$0</span></div>
-              <div class="flex justify-between text-sm text-pink-600 font-extrabold"><span>Precio Venta Sugerido:</span><span id="resumen-precio-venta">$0</span></div>
-              <div class="flex justify-between text-xs text-emerald-600 font-bold"><span>Ganancia Neta:</span><span id="resumen-ganancia-limpia">$0</span></div>
-            </div>
-            
-            <div class="flex gap-2">
-              <button id="save-recipe-btn" class="flex-1 py-3 bg-pink-600 hover:bg-pink-500 font-bold rounded-xl text-white text-xs transition shadow-md shadow-pink-600/20">Guardar en Catálogo</button>
-              <button onclick="generarCotizacionRapida()" class="px-4 py-3 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-xl text-white text-xs transition shadow-md shadow-emerald-600/20" title="Generar Cotización WhatsApp">Cotizar</button>
-            </div>
+        <!-- PESTAÑA 5: CATÁLOGO -->
+        <section id="tab-catalogo" class="tab-content hidden space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Catálogo de Productos Guardados</h2>
+            <p class="text-xs text-slate-600 font-medium">Productos y desayunos listos para ofrecer en Manizales</p>
           </div>
-        </div>
-      </section>
+          <div id="catalogo-filtros-container" class="flex flex-wrap gap-2 mb-6"></div>
+          <div id="catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"></div>
+        </section>
 
-      <!-- PESTAÑA: CATÁLOGO DE PRODUCTOS -->
-      <section id="tab-catalogo" class="tab-content hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900">Catálogo de Productos Guardados</h2>
-          <p class="text-xs text-slate-600 font-medium">Productos y desayunos listos para ofrecer en Manizales</p>
-        </div>
-        <div id="catalogo-filtros-container" class="flex flex-wrap gap-2 mb-6"></div>
-        <div id="catalogo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-      </section>
+        <!-- PESTAÑA 6: LOGÍSTICA DE PEDIDOS -->
+        <section id="tab-ventas" class="tab-content hidden space-y-6">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900">Agenda de Pedidos y Logística de Entregas</h2>
+            <p class="text-xs text-slate-600 font-medium">Controla destinatarios, horarios y genera recibos o comprobantes de venta</p>
+          </div>
 
-      <!-- PESTAÑA: PEDIDOS Y LOGÍSTICA -->
-      <section id="tab-ventas" class="tab-content hidden space-y-6">
-        <div>
-          <h2 class="text-2xl font-black text-slate-900">Agenda de Pedidos y Logística de Entregas</h2>
-          <p class="text-xs text-slate-600 font-medium">Controla destinatarios, horarios y genera recibos o comprobantes de venta</p>
-        </div>
+          <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
+            <h3 class="text-xs sm:text-sm font-bold text-slate-800">Registrar Nuevo Pedido / Venta</h3>
+            <form id="form-venta" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Producto / Combo</label>
+                <select id="venta-producto-select" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800"></select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad</label>
+                <input type="number" id="venta-cantidad" value="1" min="1" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha de Entrega</label>
+                <input type="date" id="venta-fecha-input" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Franja Horaria</label>
+                <select id="venta-horario" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+                  <option value="Mañana (7:00 AM - 9:00 AM)">Mañana (7:00 AM - 9:00 AM)</option>
+                  <option value="Media Mañana (9:00 AM - 12:00 M)">Media Mañana (9:00 AM - 12:00 M)</option>
+                  <option value="Tarde (2:00 PM - 5:00 PM)">Tarde (2:00 PM - 5:00 PM)</option>
+                  <option value="Nocturna (Personalizada)">Nocturna (Personalizada)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre del Homenajeado</label>
+                <input type="text" id="venta-destinatario" placeholder="Ej: Maria Gomez" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Dirección y Barrio</label>
+                <input type="text" id="venta-direccion" placeholder="Ej: Cable Plaza, Centro" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono de Contacto</label>
+                <input type="text" id="venta-telefono" placeholder="Ej: 3052201454" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+              </div>
+              <div class="flex items-end pt-2 sm:pt-0">
+                <button type="submit" class="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-sm transition shadow-md shadow-pink-600/20">Registrar Pedido</button>
+              </div>
+            </form>
+          </div>
 
-        <div class="p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
-          <h3 class="text-sm font-bold text-slate-800">Registrar Nuevo Pedido / Venta</h3>
-          <form id="form-venta" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Producto / Combo</label>
-              <select id="venta-producto-select" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800"></select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad</label>
-              <input type="number" id="venta-cantidad" value="1" min="1" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Fecha de Entrega</label>
-              <input type="date" id="venta-fecha-input" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-pink-500">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Franja Horaria</label>
-              <select id="venta-horario" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-                <option value="Mañana (7:00 AM - 9:00 AM)">Mañana (7:00 AM - 9:00 AM)</option>
-                <option value="Media Mañana (9:00 AM - 12:00 M)">Media Mañana (9:00 AM - 12:00 M)</option>
-                <option value="Tarde (2:00 PM - 5:00 PM)">Tarde (2:00 PM - 5:00 PM)</option>
-                <option value="Nocturna (Personalizada)">Nocturna (Personalizada)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Nombre del Homenajeado</label>
-              <input type="text" id="venta-destinatario" placeholder="Ej: Maria Gomez" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Dirección y Barrio</label>
-              <input type="text" id="venta-direccion" placeholder="Ej: Cable Plaza, Centro" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-600 mb-1">Teléfono de Contacto</label>
-              <input type="text" id="venta-telefono" placeholder="Ej: 3052201454" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-            </div>
-            <div class="flex items-end">
-              <button type="submit" class="w-full py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-sm transition shadow-md shadow-pink-600/20">Registrar Pedido</button>
-            </div>
-          </form>
-        </div>
+          <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
+            <table class="w-full text-left text-sm min-w-[850px]">
+              <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
+                <tr>
+                  <th class="p-3 sm:p-4">Entrega / Horario</th>
+                  <th class="p-3 sm:p-4">Destinatario / Dirección</th>
+                  <th class="p-3 sm:p-4">Producto</th>
+                  <th class="p-3 sm:p-4">Cobro / Ganancia</th>
+                  <th class="p-3 sm:p-4">Estado</th>
+                  <th class="p-3 sm:p-4 text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="tabla-ventas-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
 
-        <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
-          <table class="w-full text-left text-sm min-w-[950px]">
-            <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
-              <tr>
-                <th class="p-4">Entrega / Horario</th>
-                <th class="p-4">Destinatario / Dirección</th>
-                <th class="p-4">Producto</th>
-                <th class="p-4">Cobro / Ganancia</th>
-                <th class="p-4">Estado</th>
-                <th class="p-4 text-right">Acciones (WhatsApp / Recibo / Anular)</th>
-              </tr>
-            </thead>
-            <tbody id="tabla-ventas-body" class="divide-y divide-pink-100 text-slate-700"></tbody>
-          </table>
-        </div>
-      </section>
+      <!-- FOOTER GENERAL DE DERECHOS DE AUTOR -->
+      <footer class="mt-8 pt-4 border-t border-pink-200/60 text-center text-xs text-slate-500 mb-12 md:mb-0">
+        <p>© 2026 <strong>Brissa Higuita Patiño</strong>. Todos los derechos reservados.</p>
+        <p class="text-[10px] text-slate-400 mt-0.5">El Mundo de las Mini Donas • Manizales, Caldas, Colombia</p>
+      </footer>
 
     </main>
   </div>
 
-  <!-- MODAL DE RECIBO / COMPROBANTE (OPCIÓN 2) -->
+  <!-- MODAL DE RECIBO / COMPROBANTE -->
   <div id="modal-recibo" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-pink-950/40 backdrop-blur-md p-4">
-    <div class="w-full max-w-lg p-8 bg-white border border-pink-200 rounded-3xl shadow-2xl space-y-6">
+    <div class="w-full max-w-lg p-6 sm:p-8 bg-white border border-pink-200 rounded-3xl shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
       <div id="recibo-contenido" class="space-y-4 text-slate-800">
         <div class="text-center border-b border-pink-100 pb-4">
-          <h2 class="text-xl font-black text-pink-600">EL MUNDO DE LAS MINI DONAS</h2>
+          <h2 class="text-lg sm:text-xl font-black text-pink-600">EL MUNDO DE LAS MINI DONAS</h2>
           <p class="text-xs text-slate-500 font-medium">Manizales, Caldas | Tel: 3052201454</p>
-          <h3 class="text-sm font-bold text-slate-800 mt-3">COMPROBANTE DE PEDIDO</h3>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-800 mt-3">COMPROBANTE DE PEDIDO</h3>
         </div>
         <div class="text-xs space-y-1.5 text-slate-600">
           <div><strong class="text-slate-800">Fecha de Emisión:</strong> <span id="rec-fecha"></span></div>
@@ -443,12 +512,23 @@
           ¡Gracias por confiar en nosotros para endulzar tus momentos especiales! ❤️
         </div>
       </div>
-      <div class="flex gap-3 pt-2">
+      <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
         <button onclick="window.print()" class="flex-1 py-2.5 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-xs transition">Imprimir / Guardar PDF</button>
         <button onclick="cerrarModalRecibo()" class="px-4 py-2.5 bg-pink-100 hover:bg-pink-200 text-slate-700 font-bold rounded-xl text-xs transition">Cerrar</button>
       </div>
     </div>
   </div>
+
+  <!-- REGISTRO DEL SERVICE WORKER (PWA) -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js')
+          .then((reg) => console.log('PWA Service Worker listo:', reg.scope))
+          .catch((err) => console.log('Error PWA Service Worker:', err));
+      });
+    }
+  </script>
 
   <script src="app.js"></script>
 </body>

@@ -1,0 +1,17 @@
+{
+  "name": "El Mundo de las Mini Donas",
+  "short_name": "Mini Donas",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#fce7f3",
+  "theme_color": "#db2777",
+  "description": "Sistema de Gestión, Costeo y Logística para El Mundo de las Mini Donas en Manizales",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3014/3014736.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

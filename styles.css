@@ -64,3 +64,9 @@ button, input, select {
     box-shadow: none !important;
   }
 }
+
+/* Resaltado de pestaña activa en la navegación inferior móvil */
+.nav-btn-mobile.active {
+  color: #db2777; /* Rosa fucsia vibrante */
+  font-weight: 700;
+}
