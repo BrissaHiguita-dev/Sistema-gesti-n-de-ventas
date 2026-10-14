@@ -6,9 +6,10 @@ let recetaActual = [];
 let catalogo = [];
 let ventas = [];
 let gastos = [];
-let fidelidad = []; // Módulo de Tarjeta de Fidelidad Digital
+let fidelidad = [];
 let categorias = ['MINI DONAS', 'DESAYUNOS', 'ARTE Y VELAS', 'OTROS'];
 let categoriaFiltroActual = 'TODOS';
+let categoriaInsumoFiltroActual = 'TODOS'; // Filtro de categoría en Inventario de Insumos
 
 let chartBalanceInstance = null;
 let chartPopularesInstance = null;
@@ -109,6 +110,8 @@ function switchTab(tabId) {
   if (tabId === 'tab-dashboard') renderDashboard();
   if (tabId === 'tab-calendario') renderCalendario();
   if (tabId === 'tab-fidelidad') renderFidelidad();
+  if (tabId === 'tab-insumos') renderFiltrosInsumos();
+  if (tabId === 'tab-calculadora') actualizarSelectoresCalculadora();
   if (typeof lucide !== 'undefined') lucide.createIcons();
 }
 
@@ -135,6 +138,7 @@ function cargarDatosDesdeStorage() {
   if (catGuardadas && catGuardadas.length > 0) categorias = catGuardadas;
 
   guardarEnStorage();
+  renderFiltrosInsumos();
   renderInsumos();
   verificarStockBajo();
   renderGastos();
@@ -168,7 +172,7 @@ function registrarSelloFidelidad() {
   let cliente = fidelidad.find(f => f.telefono === telefono);
   if (cliente) {
     cliente.sellos += sellosNuevos;
-    cliente.nombre = nombre; // Actualizar nombre por si acaso
+    cliente.nombre = nombre;
   } else {
     fidelidad.push({
       id: Date.now().toString(),
@@ -180,6 +184,7 @@ function registrarSelloFidelidad() {
 
   guardarEnStorage();
   renderFidelidad();
+  renderDashboard();
 
   document.getElementById('fidelidad-nombre').value = '';
   document.getElementById('fidelidad-telefono').value = '';
@@ -243,9 +248,10 @@ function canjearPremioFidelidad(id) {
     return;
   }
 
-  cliente.sellos -= 5; // Resta los 5 sellos del premio canjeado
+  cliente.sellos -= 5;
   guardarEnStorage();
   renderFidelidad();
+  renderDashboard();
   alert(`¡Premio canjeado con éxito para ${cliente.nombre}! Se han descontado 5 sellos de su tarjeta.`);
 }
 
@@ -253,11 +259,29 @@ function eliminarClienteFidelidad(id) {
   fidelidad = fidelidad.filter(f => f.id !== id);
   guardarEnStorage();
   renderFidelidad();
+  renderDashboard();
 }
 
 // ==========================================
 // MÓDULO: INVENTARIO & ALERTAS DE STOCK BAJO
 // ==========================================
+function renderFiltrosInsumos() {
+  const container = document.getElementById('insumos-filtros-container');
+  if (!container) return;
+
+  const categoriasInsumos = ['TODOS', 'MATERIA PRIMA', 'EMPAQUES', 'DECORACION', 'OTROS'];
+  container.innerHTML = categoriasInsumos.map(cat => {
+    const esActivo = categoriaInsumoFiltroActual === cat;
+    return `<button onclick="filtrarInsumosCat('${cat}')" class="px-4 py-2 ${esActivo ? 'bg-pink-600 text-white font-bold' : 'bg-pink-100 text-slate-600 hover:text-slate-900'} rounded-xl text-xs transition shadow-sm shrink-0">${cat}</button>`;
+  }).join('');
+}
+
+function filtrarInsumosCat(cat) {
+  categoriaInsumoFiltroActual = cat;
+  renderFiltrosInsumos();
+  renderInsumos();
+}
+
 function guardarInsumo() {
   const nombre = document.getElementById('insumo-nombre').value;
   const categoria = document.getElementById('insumo-categoria').value;
@@ -280,6 +304,7 @@ function guardarInsumo() {
   guardarEnStorage();
   renderInsumos();
   verificarStockBajo();
+  renderDashboard();
   actualizarSelectores();
 
   document.getElementById('insumo-nombre').value = '';
@@ -293,7 +318,16 @@ function renderInsumos() {
   if (!tbody) return;
   tbody.innerHTML = '';
 
-  insumos.forEach(item => {
+  const insumosFiltrados = categoriaInsumoFiltroActual === 'TODOS' 
+    ? insumos 
+    : insumos.filter(i => (i.categoria || 'OTROS') === categoriaInsumoFiltroActual);
+
+  if (insumosFiltrados.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-slate-400 text-xs italic">No hay insumos registrados en esta categoría.</td></tr>';
+    return;
+  }
+
+  insumosFiltrados.forEach(item => {
     const esStockBajo = item.cantidad <= (item.minimo || 10);
     const badgeStock = esStockBajo 
       ? `<span class="px-2 py-0.5 bg-amber-100 text-amber-800 font-bold text-[10px] rounded-md flex items-center gap-1 w-max">⚠️ ${item.cantidad} ${item.unidad} (Bajo)</span>`
@@ -334,19 +368,33 @@ function eliminarInsumo(id) {
   guardarEnStorage();
   renderInsumos();
   verificarStockBajo();
+  renderDashboard();
   actualizarSelectores();
 }
 
 function actualizarSelectores() {
-  const selectReceta = document.getElementById('receta-insumo-select');
+  actualizarSelectoresCalculadora();
   const selectVenta = document.getElementById('venta-producto-select');
-
-  if (selectReceta) {
-    selectReceta.innerHTML = insumos.map(i => `<option value="${i.id}">[${i.categoria || 'MATERIA'}] ${i.nombre} ($${i.costoUnitario.toFixed(2)}/${i.unidad.slice(0, -1)})</option>`).join('');
-  }
   if (selectVenta) {
     selectVenta.innerHTML = catalogo.map(c => `<option value="${c.id}">${c.nombre} ($${c.precioVenta.toLocaleString()})</option>`).join('');
   }
+}
+
+function actualizarSelectoresCalculadora() {
+  const selectReceta = document.getElementById('receta-insumo-select');
+  const filtroCat = document.getElementById('receta-filtro-cat')?.value || 'TODOS';
+  if (!selectReceta) return;
+
+  const insumosFiltrados = filtroCat === 'TODOS' 
+    ? insumos 
+    : insumos.filter(i => (i.categoria || 'OTROS') === filtroCat);
+
+  if (insumosFiltrados.length === 0) {
+    selectReceta.innerHTML = '<option value="">No hay insumos en esta categoría</option>';
+    return;
+  }
+
+  selectReceta.innerHTML = insumosFiltrados.map(i => `<option value="${i.id}">[${i.categoria || 'MATERIA'}] ${i.nombre} ($${i.costoUnitario.toFixed(2)}/${i.unidad.slice(0, -1)})</option>`).join('');
 }
 
 // ==========================================
@@ -822,6 +870,7 @@ function cambiarEstadoPedido(id, nuevoEstado) {
     venta.estado = nuevoEstado;
     guardarEnStorage();
     renderVentas();
+    renderDashboard();
   }
 }
 
@@ -1114,19 +1163,72 @@ function renderDashboard() {
   const totalVentas = ventasFiltradas.reduce((acc, v) => acc + v.totalCobrado, 0);
   const totalGananciaBruta = ventasFiltradas.reduce((acc, v) => acc + v.gananciaNeta, 0);
   const totalGastos = gastosFiltrados.reduce((acc, g) => acc + g.valor, 0);
-  
   const utilidadNetaReal = totalGananciaBruta - totalGastos;
+  const ticketPromedio = ventasFiltradas.length > 0 ? totalVentas / ventasFiltradas.length : 0;
 
   document.getElementById('kpi-ventas-totales').innerText = '$' + totalVentas.toLocaleString();
   document.getElementById('kpi-ganancia-total').innerText = '$' + totalGananciaBruta.toLocaleString();
   document.getElementById('kpi-gastos-totales').innerText = '$' + totalGastos.toLocaleString();
   
   const kpiUtilidad = document.getElementById('kpi-utilidad-neta');
-  if (kpiUtilidad) {
-    kpiUtilidad.innerText = '$' + utilidadNetaReal.toLocaleString();
-  }
+  if (kpiUtilidad) kpiUtilidad.innerText = '$' + utilidadNetaReal.toLocaleString();
+
+  const kpiTicket = document.getElementById('kpi-ticket-promedio');
+  if (kpiTicket) kpiTicket.innerText = '$' + Math.round(ticketPromedio).toLocaleString();
 
   document.getElementById('kpi-pedidos-count').innerText = ventasFiltradas.length;
+
+  const kpiClienteEstrella = document.getElementById('kpi-cliente-estrella');
+  if (kpiClienteEstrella) {
+    if (fidelidad.length > 0) {
+      const clienteTop = [...fidelidad].sort((a, b) => b.sellos - a.sellos)[0];
+      kpiClienteEstrella.innerText = `${clienteTop.nombre} (${clienteTop.sellos} sellos)`;
+    } else {
+      kpiClienteEstrella.innerText = 'Sin registros';
+    }
+  }
+
+  const hoyYMD = new Date().toISOString().split('T')[0];
+  const entregasHoyContainer = document.getElementById('dash-entregas-hoy');
+  if (entregasHoyContainer) {
+    entregasHoyContainer.innerHTML = '';
+    const pedidosHoy = ventas.filter(v => v.fechaObj && v.fechaObj.startsWith(hoyYMD));
+    if (pedidosHoy.length === 0) {
+      entregasHoyContainer.innerHTML = '<p class="text-xs text-slate-400 italic">No hay entregas programadas para hoy.</p>';
+    } else {
+      pedidosHoy.forEach(p => {
+        const item = document.createElement('div');
+        item.className = 'p-3 bg-pink-50/70 border border-pink-200 rounded-2xl flex justify-between items-center text-xs';
+        item.innerHTML = `
+          <div>
+            <div class="font-bold text-slate-900">👤 ${p.destinatario} (${p.cantidad}x ${p.producto})</div>
+            <div class="text-slate-600">📍 ${p.direccion} | 📞 ${p.telefono}</div>
+          </div>
+          <span class="px-2 py-1 bg-pink-600 text-white font-bold rounded-lg text-[10px]">${p.horario}</span>
+        `;
+        entregasHoyContainer.appendChild(item);
+      });
+    }
+  }
+
+  const insumosCriticosContainer = document.getElementById('dash-insumos-criticos');
+  if (insumosCriticosContainer) {
+    insumosCriticosContainer.innerHTML = '';
+    const insumosBajos = insumos.filter(i => i.cantidad <= (i.minimo || 10));
+    if (insumosBajos.length === 0) {
+      insumosCriticosContainer.innerHTML = '<p class="text-xs text-emerald-600 font-semibold">✨ Todo el inventario está en niveles óptimos.</p>';
+    } else {
+      insumosBajos.forEach(i => {
+        const item = document.createElement('div');
+        item.className = 'p-3 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center text-xs';
+        item.innerHTML = `
+          <div class="font-bold text-amber-900">⚠️ ${i.nombre}</div>
+          <span class="px-2 py-0.5 bg-amber-200 text-amber-900 font-bold rounded-md text-[10px]">${i.cantidad} ${i.unidad} (Mín: ${i.minimo})</span>
+        `;
+        insumosCriticosContainer.appendChild(item);
+      });
+    }
+  }
 
   const canvasBalance = document.getElementById('chart-balance');
   if (canvasBalance) {

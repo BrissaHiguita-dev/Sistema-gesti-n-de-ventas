@@ -162,7 +162,7 @@
         <section id="tab-dashboard" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Resumen General de Rendimiento</h2>
-            <p class="text-xs text-slate-600 font-medium">Análisis financiero: ventas, ganancias brutas, gastos operativos y utilidad neta real</p>
+            <p class="text-xs text-slate-600 font-medium">Centro de control: ventas, ganancias, inventario crítico, entregas de hoy y cliente estrella</p>
           </div>
           <div class="p-4 bg-white/85 backdrop-blur-md border border-pink-200/80 rounded-3xl shadow-sm flex flex-col sm:flex-row items-end gap-3 sm:gap-4">
             <div class="w-full sm:w-auto flex-1">
@@ -177,7 +177,7 @@
               <button onclick="limpiarFiltroFechas()" class="w-full sm:w-auto px-4 py-2 bg-pink-100 hover:bg-pink-200 text-pink-700 font-bold rounded-xl text-xs transition">Limpiar Filtro</button>
             </div>
           </div>
-          <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+          <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
               <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Ventas Brutas</div>
               <div id="kpi-ventas-totales" class="text-lg sm:text-2xl font-black text-slate-900">$0</div>
@@ -190,15 +190,57 @@
               <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Gastos Operativos</div>
               <div id="kpi-gastos-totales" class="text-lg sm:text-2xl font-black text-rose-500">$0</div>
             </div>
-            <div class="p-4 sm:p-5 bg-pink-500 border border-pink-400 rounded-3xl shadow-md text-white col-span-2 sm:col-span-1">
+            <div class="p-4 sm:p-5 bg-pink-500 border border-pink-400 rounded-3xl shadow-md text-white">
               <div class="text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-1 sm:mb-2 opacity-90">Utilidad Neta Real</div>
-              <div id="kpi-utilidad-neta" class="text-xl sm:text-2xl font-black text-white">$0</div>
-            </div>
-            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm col-span-2 sm:col-span-1">
-              <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 sm:mb-2">Pedidos Realizados</div>
-              <div id="kpi-pedidos-count" class="text-lg sm:text-2xl font-black text-slate-900">0</div>
+              <div id="kpi-utilidad-neta" class="text-lg sm:text-2xl font-black text-white">$0</div>
             </div>
           </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm flex items-center justify-between">
+              <div>
+                <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Ticket Promedio por Venta</div>
+                <div id="kpi-ticket-promedio" class="text-lg sm:text-xl font-black text-slate-900">$0</div>
+              </div>
+              <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center">
+                <i data-lucide="receipt" class="w-5 h-5"></i>
+              </div>
+            </div>
+            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm flex items-center justify-between">
+              <div>
+                <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Total Pedidos</div>
+                <div id="kpi-pedidos-count" class="text-lg sm:text-xl font-black text-slate-900">0</div>
+              </div>
+              <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+              </div>
+            </div>
+            <div class="p-4 sm:p-5 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm flex items-center justify-between">
+              <div>
+                <div class="text-[10px] sm:text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">🌟 Cliente Estrella</div>
+                <div id="kpi-cliente-estrella" class="text-xs sm:text-sm font-bold text-pink-600 truncate max-w-[180px]">Ninguno aún</div>
+              </div>
+              <div class="w-10 h-10 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center">
+                <i data-lucide="award" class="w-5 h-5"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+                <i data-lucide="truck" class="w-4 h-4 text-pink-600"></i> Próximas Entregas de Hoy
+              </h3>
+              <div id="dash-entregas-hoy" class="space-y-2"></div>
+            </div>
+            <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-4">
+              <h3 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500"></i> Alertas de Insumos Críticos / Bajos
+              </h3>
+              <div id="dash-insumos-criticos" class="space-y-2"></div>
+            </div>
+          </div>
+
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm">
               <h3 class="text-xs sm:text-sm font-bold text-slate-800 mb-4">Balance Financiero (Ingresos vs Utilidad Real)</h3>
@@ -211,11 +253,11 @@
           </div>
         </section>
 
-        <!-- INVENTARIO -->
+        <!-- INVENTARIO (CON FILTRO DE CATEGORÍA) -->
         <section id="tab-insumos" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Inventario de Insumos y Materiales</h2>
-            <p class="text-xs text-slate-600 font-medium">Controla tus existencias y recibe alertas de stock bajo</p>
+            <p class="text-xs text-slate-600 font-medium">Controla tus existencias y filtra por categoría</p>
           </div>
           <div id="alerta-stock-container" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-3xl shadow-sm flex items-start gap-3">
             <div class="p-2 bg-amber-100 text-amber-600 rounded-xl shrink-0 mt-0.5"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
@@ -265,6 +307,10 @@
               </div>
             </form>
           </div>
+
+          <!-- FILTRO DE CATEGORÍAS EN INVENTARIO -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1" id="insumos-filtros-container"></div>
+
           <div class="bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm overflow-x-auto">
             <table class="w-full text-left text-sm min-w-[700px]">
               <thead class="bg-pink-50/80 text-xs uppercase tracking-wider text-slate-600 border-b border-pink-200">
@@ -323,25 +369,35 @@
           </div>
         </section>
 
-        <!-- CALCULADORA -->
+        <!-- CALCULADORA (CON FILTRO DE CATEGORÍA PARA INSUMOS) -->
         <section id="tab-calculadora" class="tab-content hidden space-y-6">
           <div>
             <h2 class="text-xl sm:text-2xl font-black text-slate-900">Calculadora & Cotizador Comercial</h2>
-            <p class="text-xs text-slate-600 font-medium">Arma recetas, calcula precios o genera cotizaciones instantáneas para clientes</p>
+            <p class="text-xs text-slate-600 font-medium">Filtra insumos por categoría y arma tus recetas con facilidad</p>
           </div>
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="lg:col-span-2 p-5 sm:p-6 bg-white/90 border border-pink-200/80 rounded-3xl shadow-sm space-y-6">
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                <div class="sm:col-span-2">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Filtrar Insumo por Categoría</label>
+                  <select id="receta-filtro-cat" onchange="actualizarSelectoresCalculadora()" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+                    <option value="TODOS">🔍 Todas las categorías</option>
+                    <option value="MATERIA PRIMA">Materia Prima</option>
+                    <option value="EMPAQUES">Empaques</option>
+                    <option value="DECORACION">Decoración</option>
+                    <option value="OTROS">Otros</option>
+                  </select>
+                </div>
+                <div>
                   <label class="block text-xs font-semibold text-slate-600 mb-1">Insumo del Inventario</label>
                   <select id="receta-insumo-select" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800"></select>
                 </div>
-                <div>
-                  <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Usada</label>
-                  <div class="flex gap-2">
-                    <input type="number" id="receta-insumo-cant" step="any" placeholder="0" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
-                    <button id="add-to-recipe-btn" class="px-4 py-2 bg-pink-100 hover:bg-pink-200 border border-pink-200 text-pink-700 font-bold rounded-xl text-sm transition">+</button>
-                  </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Cantidad Usada</label>
+                <div class="flex gap-2">
+                  <input type="number" id="receta-insumo-cant" step="any" placeholder="0" class="w-full px-3 py-2 bg-pink-50/50 border border-pink-200 rounded-xl text-sm focus:outline-none focus:border-pink-500 text-slate-800">
+                  <button id="add-to-recipe-btn" class="px-6 py-2 bg-pink-600 hover:bg-pink-500 text-white font-bold rounded-xl text-sm transition shadow-md shadow-pink-600/20">Agregar</button>
                 </div>
               </div>
               <div class="border border-pink-200 rounded-2xl overflow-x-auto">
@@ -493,7 +549,7 @@
           </div>
         </section>
 
-        <!-- PESTAÑA NUEVA: TARJETA DE FIDELIDAD DIGITAL -->
+        <!-- TARJETA DE FIDELIDAD DIGITAL -->
         <section id="tab-fidelidad" class="tab-content hidden space-y-6">
           <div class="p-6 bg-gradient-to-r from-pink-500 to-rose-400 rounded-3xl text-white shadow-lg shadow-pink-500/15 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="space-y-1 text-center sm:text-left">
@@ -506,7 +562,6 @@
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            <!-- Registrar Cliente / Sumar Sello -->
             <div class="lg:col-span-5 bg-white/90 backdrop-blur-md border border-pink-200/80 p-6 rounded-3xl shadow-sm space-y-5">
               <h3 class="text-base font-bold text-slate-800 flex items-center gap-2 border-b border-pink-100 pb-3">
                 <i data-lucide="user-plus" class="w-4 h-4 text-pink-600"></i> Registrar o Sumar Compra
@@ -530,7 +585,6 @@
               </form>
             </div>
 
-            <!-- Listado de Clientes en Tarjeta de Fidelidad -->
             <div class="lg:col-span-7 bg-white/90 backdrop-blur-md border border-pink-200/80 p-6 rounded-3xl shadow-sm space-y-4">
               <h3 class="text-base font-bold text-slate-800 flex items-center gap-2 border-b border-pink-100 pb-3">
                 <i data-lucide="users" class="w-4 h-4 text-pink-600"></i> Clientes Frecuentes Activos (Meta: 5 Sellos)
