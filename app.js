@@ -1250,16 +1250,29 @@ function renderDashboard() {
     });
   }
 
+  // GRÁFICO CIRCULAR: AGRUPADO POR CATEGORÍA EN LUGAR DE POR NOMBRE DE PRODUCTO
   const canvasPopulares = document.getElementById('chart-populares');
   if (canvasPopulares) {
-    const conteo = {};
-    ventasFiltradas.forEach(v => { conteo[v.producto] = (conteo[v.producto] || 0) + v.cantidad; });
+    const conteoPorCategoria = {};
+
+    ventasFiltradas.forEach(v => {
+      // Buscar la categoría del producto en el catálogo
+      const prodEnCatalogo = catalogo.find(c => c.nombre === v.producto);
+      const categoria = prodEnCatalogo ? (prodEnCatalogo.categoria || 'OTROS') : 'OTROS';
+
+      // Sumar la cantidad vendida a su categoría
+      conteoPorCategoria[categoria] = (conteoPorCategoria[categoria] || 0) + v.cantidad;
+    });
+
     if (chartPopularesInstance) chartPopularesInstance.destroy();
     chartPopularesInstance = new Chart(canvasPopulares.getContext('2d'), {
       type: 'doughnut',
       data: {
-        labels: Object.keys(conteo).length > 0 ? Object.keys(conteo) : ['Sin ventas'],
-        datasets: [{ data: Object.values(conteo).length > 0 ? Object.values(conteo) : [1], backgroundColor: ['#db2777', '#f43f5e', '#fb7185', '#f472b6', '#e879f9'] }]
+        labels: Object.keys(conteoPorCategoria).length > 0 ? Object.keys(conteoPorCategoria) : ['Sin ventas'],
+        datasets: [{ 
+          data: Object.values(conteoPorCategoria).length > 0 ? Object.values(conteoPorCategoria) : [1], 
+          backgroundColor: ['#db2777', '#f43f5e', '#fb7185', '#f472b6', '#e879f9', '#a855f7'] 
+        }]
       },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#64748b' } } } }
     });
